@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 interface TabProps {
   categories: Categories[];
-  filterFunction: React.Dispatch<React.SetStateAction<string>>;
-  selected: string;
+  filterFunction: React.Dispatch<React.SetStateAction<string | null>>;
+  selected: string | null;
 }
 
 interface Categories {
