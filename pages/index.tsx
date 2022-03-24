@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
 import { getAllPosts } from "../lib/getAllPosts";
