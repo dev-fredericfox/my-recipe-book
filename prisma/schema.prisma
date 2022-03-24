@@ -14,6 +14,7 @@ model Post {
   id         Int       @id @default(autoincrement())
   title      String
   content    String?
+  ingredients Json?
   coverimg   String?
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?

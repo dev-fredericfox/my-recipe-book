@@ -21,7 +21,7 @@ return (feed.map((el) => {
             <p className="font-bold text-2xl">
               {el.title}
             </p>
-            <p>{el.category.name} Corner</p>
+            <p>{el.ingredients.length} Ingredients | {el.category.name}</p>
             </div>
           </div>
         </Link>
