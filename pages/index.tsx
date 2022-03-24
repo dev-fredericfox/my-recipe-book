@@ -19,30 +19,6 @@ const Home: NextPage<ModifiedFeed> = ({ feed }) => {
   const [filter, setFilter] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const filterFeed = (term?: string | null) => {
-  //     if (term !== null && term !== "All") {
-  //       return feed.filter((feedElement) => feedElement.category.name === term);
-  //     }
-  //     return feed;
-  //   };
-  //   const filtered = filterFeed(filter);
-  //   setFilteredFeed(filtered);
-  // }, [filter, feed]);
-
-  // useEffect(() => {
-  //   const searchFeed = (term: string | null = "") => {
-  //     if (term !== null && term !== "") {
-  //       return feed.filter((feedElement) =>
-  //         feedElement.title.toLowerCase().includes(term.toLowerCase())
-  //       );
-  //     }
-  //     return feed;
-  //   };
-  //   const query = searchFeed(search);
-  //   setFilteredFeed(query);
-  // }, [search, feed]);
-
   useEffect(() => {
     const globalFilter = (filter, search) => {
       let cache = feed;
