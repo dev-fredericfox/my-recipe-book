@@ -6,6 +6,7 @@ import { getAllPosts } from "../lib/getAllPosts";
 import Tab from "../components/Tab";
 import Search from "../components/Search";
 import Tile from "../components/Tile";
+import NoRecpie from "../components/NoRecipe";
 import Layout from "../components/Layout";
 import { ModifiedFeed } from "../lib/interfaces";
 
@@ -57,7 +58,9 @@ const Home: NextPage<ModifiedFeed> = ({ feed }) => {
           />
         </div>
         <div>
-          <Tile feed={filteredFeed} />
+          {filteredFeed.length > 0 && <Tile feed={filteredFeed} />}
+          {filteredFeed.length === 0 && <NoRecpie/>}
+          
         </div>
       </Layout>
     </div>
