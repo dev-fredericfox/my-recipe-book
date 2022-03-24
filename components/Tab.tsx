@@ -40,9 +40,9 @@ export default function Tab({
         <li className="mr-2" key={idx}>
           <a
             onClick={() => filterFunction(el)}
-            className={`inline-block py-3 px-2 rounded-lg min-w-[60px] ${
+            className={`inline-block cursor-pointer	py-3 px-2 rounded-lg min-w-[60px] ${
               localSelected === el
-                ? "text-white bg-blue-600"
+                ? "text-white bg-green-600"
                 : "hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white"
             }`}
             aria-current="page"
