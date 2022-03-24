@@ -20,7 +20,7 @@ const Home: NextPage<ModifiedFeed> = ({ feed }) => {
   const [search, setSearch] = useState<string | null>(null);
 
   useEffect(() => {
-    const globalFilter = (filter, search) => {
+    const globalFilter = (filter: string | null, search: string | null) => {
       let cache = feed;
       if (filter !== null && filter !== "All") {
         cache = feed.filter(
@@ -32,7 +32,7 @@ const Home: NextPage<ModifiedFeed> = ({ feed }) => {
           feedElement.title.toLowerCase().includes(search.toLowerCase())
         );
       }
-      setFilteredFeed(cache)
+      setFilteredFeed(cache);
     };
     globalFilter(filter, search);
   }, [filter, search, feed]);
