@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "./Footer"
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -6,10 +7,10 @@ interface LayoutProps {
 
 export default function Layout({ children }:LayoutProps) {
   return (
-    <div className="bg-slate-100 ">
-      <div className="w-10/12 mx-auto flex flex-col h-screen">
+    <div className="bg-slate-100">
+      <div className="w-10/12 mx-auto flex flex-col min-h-screen h-full pb-4">
         <main className="grow">{children}</main>
-        <footer className="bottom-0 mx-auto">About - Imprint - Data</footer>
+        <footer className="mx-auto"><Footer/></footer>
       </div>
     </div>
   );
