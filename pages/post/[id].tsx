@@ -8,6 +8,7 @@ import { ArrowSmLeftIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import IngredientsList from "../../components/IngredientsList"
 
+
 const BlogPost: NextPage = ({ postData }) => {
   const post = postData[0];
 
@@ -49,7 +50,8 @@ const BlogPost: NextPage = ({ postData }) => {
             <p className="text-2xl mt-2 font-bold">
               Directions
             </p>
-          <div>{post.content}</div>
+          {/* Maybe render Markdown? */}
+          <div className="mt-3">{post.content}</div>
           </div>
         </main>
       </Layout>
@@ -67,7 +69,14 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+interface Params {
+  params: Id
+}
+interface Id {
+  id: string
+}
+
+export async function getStaticProps({ params }:Params) {
   const postId = parseInt(params.id);
   const postData = await getPost(postId);
   return {
