@@ -30,7 +30,7 @@ model Post {
 model User {
   id            Int       @id @default(autoincrement())
   name          String?
-  profleimg     String?
+  image         String?
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   createdAt     DateTime  @default(now()) @map(name: "created_at")
