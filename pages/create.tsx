@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { GetServerSideProps } from "next";
+import { getAllCategories } from "../lib/getAllCategories";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Title from "../components/Title";
 import GenericGreenButton from "../components/GenericGreenButton";
 import Layout from "../components/Layout";
+import CategoryDropdown from "../components/CategoryDropdown";
+import AddCategoryModal from "../components/AddCategoryModal";
+import { Category } from "../lib/interfaces";
 
-const CreatePost: NextPage = () => {
+
+export const getServerSideProps: GetServerSideProps<any>  = async () => {
+  try {
+    const categories = await getAllCategories();
+    return {
+      props: { categories },
+    };
+  } catch (error) {
+    return {
+      props: "Error",
+    };
+  }
+};
+
+interface Props {
+  categories: Category[]
+}
+
+const CreatePost: NextPage<Props> = ({ categories }) => {
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
   const [title, setTitle] = useState("");
   const [coverimg, setCoverimg] = useState("");
@@ -15,6 +38,17 @@ const CreatePost: NextPage = () => {
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
+  const [categoryArray, setCategoryArray] = useState<Category[]>(categories);
+  const [addNewCategory, setAddNewCategory] = useState(false);
+
+  const appendNewlyAddedCategoryToCategoryArray = (e:Category) => {
+    console.log(e);
+    setCategory(e.name)
+    const cache = [...categoryArray];
+    cache.push(e);
+    console.log(cache)
+    setCategoryArray(cache);
+  };
 
   const submitData = async (published: boolean) => {
     console.log("clicked submitted");
@@ -36,12 +70,19 @@ const CreatePost: NextPage = () => {
       });
       let result = await response.json();
       if (response.status === 403) {
-        throw Error ("You need to be logged in to post a new recipe.")
+        throw Error("You need to be logged in to post a new recipe.");
       }
-      setFetchResult(result);
-      setFetchStatus("OK");
-      console.log(fetchResult);
-    } catch (error:any) {
+      if (response.status === 500) {
+        throw Error("Database Error");
+      }
+      if (response.status === 200) {
+        setFetchResult(result);
+        setFetchStatus("OK");
+        console.log(fetchResult);
+      } else {
+        throw Error("Something went wrong");
+      }
+    } catch (error: any) {
       setFetchError(error.message);
       setFetchStatus("Error");
       console.error(error);
@@ -51,6 +92,10 @@ const CreatePost: NextPage = () => {
   useEffect(() => {
     console.log(fetchResult);
   }, [fetchResult]);
+
+  // useEffect(() => {
+  //   console.log(categories);
+  // }, []);
 
   interface Ingredient {
     emoji: string;
@@ -147,22 +192,28 @@ const CreatePost: NextPage = () => {
               placeholder="Recipe Name"
             />
           </div>
-          <div className="mt-2">
+          <div className="flex flex-row mt-2">
             <input
               onChange={(e) => setCoverimg(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2"
+              className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
               type="text"
               placeholder="Cover Image"
             />
-          </div>
-          <div className="mt-2">
-            <input
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2"
-              type="text"
-              placeholder="Category"
+            <CategoryDropdown
+              categories={categoryArray}  
+              select={(e) => setCategory(e)}
+              selected={category}
+              addNewCategory={():void => setAddNewCategory(!addNewCategory)}
             />
           </div>
+          {addNewCategory && (
+            <AddCategoryModal
+              closeModal={() => setAddNewCategory(false)}
+              addNewCategoryToDropdown={(e:Category) =>
+                appendNewlyAddedCategoryToCategoryArray(e)
+              }
+            />
+          )}
           {ingredientRow(amountOfIngredients)}
           <div className="flex flex-row">
             <GenericGreenButton
