@@ -4,6 +4,7 @@ import type { GetStaticProps } from "next";
 import Head from "next/head";
 import { getAllPosts } from "../lib/getAllPosts";
 import Tab from "../components/Tab";
+import Title from "../components/Tile"
 import Search from "../components/Search";
 import Tile from "../components/Tile";
 import NoRecpie from "../components/NoRecipe";
