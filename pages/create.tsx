@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Title from "../components/Title";
+import GenericGreenButton from "../components/GenericGreenButton";
+import Layout from "../components/Layout";
+
+const CreatePost: NextPage = () => {
+  const [amountOfIngredients, setAmountOfIngredients] = useState(1);
+  const [title, setTitle] = useState("");
+  const [coverimg, setCoverimg] = useState("");
+  const [category, setCategory] = useState("");
+  const [content, setContent] = useState("");
+  const [ingredients, setIngredients] = useState<Array<Ingredient>>([]);
+  const [fetchError, setFetchError] = useState("");
+  const [fetchResult, setFetchResult] = useState("");
+  const [fetchStatus, setFetchStatus] = useState("");
+
+  const submitData = async (published: boolean) => {
+    console.log("clicked submitted");
+    const body = {
+      title,
+      content,
+      coverimg,
+      category,
+      published,
+      ingredients,
+    };
+    console.log(body);
+    setFetchStatus("pending");
+    try {
+      let response = await fetch(`/api/post`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      let result = await response.json();
+      if (response.status === 403) {
+        throw Error ("You need to be logged in to post a new recipe.")
+      }
+      setFetchResult(result);
+      setFetchStatus("OK");
+      console.log(fetchResult);
+    } catch (error:any) {
+      setFetchError(error.message);
+      setFetchStatus("Error");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(fetchResult);
+  }, [fetchResult]);
+
+  interface Ingredient {
+    emoji: string;
+    ingredient: string;
+    amount: string;
+    unit: string;
+  }
+
+  const removeIngredientAndPopArray = () => {
+    amountOfIngredients - 1;
+    ingredients.pop();
+  };
+  const addIngredients = (
+    ingredientValues: string,
+    ingredientName: string,
+    index: number
+  ) => {
+    const idx = index - 1;
+
+    const cache: Ingredient[] = [...ingredients];
+    const ingredient: Ingredient = {
+      emoji: cache[idx]?.emoji ?? "",
+      ingredient: cache[idx]?.ingredient ?? "",
+      amount: cache[idx]?.amount ?? "",
+      unit: cache[idx]?.unit ?? "",
+    };
+    ingredient[ingredientName as keyof Ingredient] = ingredientValues;
+    cache[idx] = ingredient;
+    setIngredients([...cache]);
+  };
+
+  const ingredientsJSX = (key: number) => (
+    <div className="flex mt-2 flex-row" key={key}>
+      <div className="mr-2 w-20">
+        <input
+          onChange={(e) => addIngredients(e.target.value, "emoji", key)}
+          className="rounded-lg pl-5 w-full h-12 px-2"
+          type="text"
+          placeholder="Emoji"
+        />
+      </div>
+      <div className="mr-2 grow">
+        <input
+          onChange={(e) => addIngredients(e.target.value, "ingredient", key)}
+          className="rounded-lg pl-5 w-full h-12 px-2"
+          type="text"
+          placeholder="Ingredient"
+        />
+      </div>
+      <div className="mr-2 w-24">
+        <input
+          onChange={(e) => addIngredients(e.target.value, "amount", key)}
+          className="rounded-lg pl-5 w-full h-12 px-2"
+          type="text"
+          placeholder="Amount"
+        />
+      </div>
+      <div className="w-20">
+        <input
+          onChange={(e) => addIngredients(e.target.value, "unit", key)}
+          className="rounded-lg pl-5 w-full h-12 px-2"
+          type="text"
+          placeholder="Unit"
+        />
+      </div>
+    </div>
+  );
+
+  const ingredientRow = (numberOfLines: number) => {
+    const rows = [];
+    for (let i = 1; i <= numberOfLines; i++) {
+      rows.push(ingredientsJSX(i));
+    }
+    return rows;
+  };
+
+  return (
+    <div>
+      <Head>
+        <title>Add Recipe</title>
+        <meta name="description" content="Add Recipe" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Layout>
+        <div>
+          <div className="mt-6">
+            <Title title="New Recipe" />
+          </div>
+          <div className="mt-6">
+            <input
+              onChange={(e) => setTitle(e.target.value)}
+              className="rounded-lg pl-5 w-full h-12 px-2"
+              type="text"
+              placeholder="Recipe Name"
+            />
+          </div>
+          <div className="mt-2">
+            <input
+              onChange={(e) => setCoverimg(e.target.value)}
+              className="rounded-lg pl-5 w-full h-12 px-2"
+              type="text"
+              placeholder="Cover Image"
+            />
+          </div>
+          <div className="mt-2">
+            <input
+              onChange={(e) => setCategory(e.target.value)}
+              className="rounded-lg pl-5 w-full h-12 px-2"
+              type="text"
+              placeholder="Category"
+            />
+          </div>
+          {ingredientRow(amountOfIngredients)}
+          <div className="flex flex-row">
+            <GenericGreenButton
+              text="Add Ingredient"
+              click={() => setAmountOfIngredients(amountOfIngredients + 1)}
+            />
+            <GenericGreenButton
+              text="Remove Ingredient"
+              click={() => removeIngredientAndPopArray()}
+            />
+          </div>
+          <div className="mt-6">
+            <textarea
+              onChange={(e) => setContent(e.target.value)}
+              className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
+              placeholder="Recipe Instructions"
+            />
+          </div>
+        </div>
+        <GenericGreenButton
+          text="Save as Draft"
+          click={() => submitData(false)}
+        />
+        <GenericGreenButton text="Publish" click={() => submitData(true)} />
+        <p>{fetchStatus}</p>
+        <p>{fetchError}</p>
+      </Layout>
+    </div>
+  );
+};
+
+export default CreatePost;
