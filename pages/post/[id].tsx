@@ -1,15 +1,20 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 import { getAllPostIds } from "../../lib/getPostIds";
-import { getPost } from "../../lib/getPosts";
+import { getPost } from "../../lib/getPost";
 import Layout from "../../components/Layout";
 import { ArrowSmLeftIcon } from "@heroicons/react/outline";
 import Link from "next/link";
-import IngredientsList from "../../components/IngredientsList"
+import IngredientsList from "../../components/IngredientsList";
+import { Post } from "../../lib/interfaces";
 
+interface Props {
+  postData: Post[]
+}
 
-const BlogPost: NextPage = ({ postData }) => {
+const BlogPost: NextPage<Props> = ({ postData }) => {
   const post = postData[0];
 
   return (
@@ -46,12 +51,13 @@ const BlogPost: NextPage = ({ postData }) => {
             <p className="text-2xl font-bold">
               Ingredients ({post.ingredients.length})
             </p>
-            <IngredientsList ingredients={post.ingredients}/>
-            <p className="text-2xl mt-2 font-bold">
-              Directions
-            </p>
-          {/* Maybe render Markdown? */}
-          <div className="mt-3">{post.content}</div>
+            <IngredientsList ingredients={post.ingredients} />
+            <p className="text-2xl mt-2 font-bold">Directions</p>
+            {
+              /* Maybe render Markdown? */
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+            }
+            {/* <div className="mt-3">{post.content}</div> */}
           </div>
         </main>
       </Layout>
@@ -70,13 +76,13 @@ export async function getStaticPaths() {
 }
 
 interface Params {
-  params: Id
+  params: Id;
 }
 interface Id {
-  id: string
+  id: string;
 }
 
-export async function getStaticProps({ params }:Params) {
+export async function getStaticProps({ params }: Params) {
   const postId = parseInt(params.id);
   const postData = await getPost(postId);
   return {
