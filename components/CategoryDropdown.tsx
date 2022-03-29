@@ -9,15 +9,12 @@ interface Props {
   addNewCategory: MouseEventHandler<HTMLButtonElement>;
 }
 
-
 export default function CategoryDropdown({
   categories,
   select,
   selected,
   addNewCategory,
 }: Props) {
-  console.log("categories");
-  console.log(categories);
   const [dropDownState, setDropDownState] = useState(false);
   return (
     <div className="mt-1">
@@ -70,6 +67,7 @@ export default function CategoryDropdown({
                   {el.name}
                 </a>
               ))}
+              <hr />
               <button
                 type="submit"
                 className="text-gray-700 block w-full text-left px-4 py-2 text-sm"
