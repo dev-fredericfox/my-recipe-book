@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
+import { MouseEventHandler } from "react";
+import { Category } from "../lib/interfaces";
 
-export default function CategoryDropdown({ categories, select, selected, addNewCategory }) {
+interface Props {
+  categories: Category[];
+  select: (e: string) => void;
+  selected: string;
+  addNewCategory: MouseEventHandler<HTMLButtonElement>;
+}
+
+
+export default function CategoryDropdown({
+  categories,
+  select,
+  selected,
+  addNewCategory,
+}: Props) {
   console.log("categories");
   console.log(categories);
   const [dropDownState, setDropDownState] = useState(false);
@@ -18,7 +33,7 @@ export default function CategoryDropdown({ categories, select, selected, addNewC
             aria-expanded="true"
             aria-haspopup="true"
           >
-            {selected=="" ? 'Category' : selected}
+            {selected == "" ? "Category" : selected}
             <svg
               className="-mr-1 ml-2 h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +55,7 @@ export default function CategoryDropdown({ categories, select, selected, addNewC
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
-            tabIndex="-1"
+            tabIndex={-1}
           >
             <div className="py-1" role="none">
               {categories.map((el) => (
