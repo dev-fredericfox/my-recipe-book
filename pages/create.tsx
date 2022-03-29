@@ -89,9 +89,9 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(fetchResult);
-  }, [fetchResult]);
+  // useEffect(() => {
+  //   console.log(fetchResult);
+  // }, [fetchResult]);
 
   // useEffect(() => {
   //   console.log(categories);
@@ -105,7 +105,7 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
   }
 
   const removeIngredientAndPopArray = () => {
-    amountOfIngredients - 1;
+    setAmountOfIngredients(amountOfIngredients - 1);
     ingredients.pop();
   };
   const addIngredients = (
