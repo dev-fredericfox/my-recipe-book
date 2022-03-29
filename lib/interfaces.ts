@@ -1,7 +1,7 @@
 export interface ModifiedFeed {
-  feed: Feed[];
+  posts: Post[];
 }
-export interface Feed {
+export interface Post {
   author: Author;
   authorID: number;
   category: Category;
@@ -13,17 +13,26 @@ export interface Feed {
   published: boolean;
   title: string;
   updatedAt: Date;
+  ingredients: Ingredients[]
 }
 export interface Author {
   name: string;
 }
 
+export interface Ingredients {
+  amount: string,
+  emoji: string,
+  ingredient: string,
+  unit: string
+}
+
 export interface Category {
   id: number;
   name: string;
+  categoryEmoji: string;
   categoryimg: string | null;
   createdAt: number;
   updatedAt: number;
-  posts: Feed[];
+  posts: Post[];
 }
 
