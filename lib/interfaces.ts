@@ -19,5 +19,11 @@ export interface Author {
 }
 
 export interface Category {
+  id: number;
   name: string;
+  categoryimg: string | null;
+  createdAt: number;
+  updatedAt: number;
+  posts: Feed[];
 }
+
