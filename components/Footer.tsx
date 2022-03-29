@@ -6,7 +6,7 @@ const dash = <span className="mx-2">-</span>;
 
 const activeSession = (
   <div className="text-center text-gray-500 flex flex-row">
-    <div>Post Overview</div> {dash}
+    <div><Link href="/dashboard">Post Overview</Link></div> {dash}
     <div><Link href="/create">New Post</Link></div> {dash}
     <div onClick={() => signOut()}>Logout</div>
   </div>
