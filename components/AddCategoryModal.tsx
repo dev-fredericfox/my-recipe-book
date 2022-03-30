@@ -33,6 +33,7 @@ export default function AddCategoryModal({
   addNewCategoryToDropdown,
 }: Props) {
   const [category, setCategory] = useState("");
+  const [emoji, setEmoji] = useState("");
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
@@ -41,6 +42,7 @@ export default function AddCategoryModal({
     console.log("clicked submitted");
     const body = {
       name: category,
+      categoryEmoji: emoji
     };
     console.log(body);
     setFetchStatus("pending");
@@ -123,6 +125,12 @@ export default function AddCategoryModal({
                 </h3>
                 <div className="mt-2">
                   <div className="mt-6">
+                  <input
+                      onChange={(e) => setEmoji(e.target.value)}
+                      className="rounded-lg pl-5 w-full h-12 px-2"
+                      type="text"
+                      placeholder="Category Emoji"
+                    />
                     <input
                       onChange={(e) => setCategory(e.target.value)}
                       className="rounded-lg pl-5 w-full h-12 px-2"
