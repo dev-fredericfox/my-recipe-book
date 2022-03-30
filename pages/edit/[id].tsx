@@ -249,7 +249,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           <div className="mt-6">
             <textarea
               onChange={(e) => setContent(e.target.value)}
-              className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
+              className="rounded-lg pt-2 pl-5 w-full h-48 px-2"
               value={content}
               placeholder="Recipe Instructions"
             />
