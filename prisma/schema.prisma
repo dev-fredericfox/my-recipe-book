@@ -43,13 +43,13 @@ model User {
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String?  @unique
-  categoryimg String?
+  id            Int      @id @default(autoincrement())
+  name          String?  @unique
+  categoryimg   String?
   categoryEmoji String?
-  createdAt   DateTime @default(now()) @map(name: "created_at")
-  updatedAt   DateTime @updatedAt @map(name: "updated_at")
-  posts       Post[]
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  updatedAt     DateTime @updatedAt @map(name: "updated_at")
+  posts         Post[]
 
   @@map(name: "category")
 }
