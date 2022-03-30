@@ -17,7 +17,7 @@ export default async function handle(
     // const author = { connect: { email: session?.user?.email } };
     const data = Object.assign(req.body);
     const connectCategory = { connect: { name: req.body.category } };
-    data.category = connectCategory
+    data.category ? data.category = connectCategory : null
     console.log(data);
     console.log("postId");
     console.log(postId);
