@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -17,6 +18,7 @@ interface Props {
 
 const BlogPost: NextPage<Props> = ({ postData }) => {
   const post = postData[0];
+  const [checkedBox, setCheckedBox] = useState([]);
 
   return (
     <div>
@@ -53,14 +55,36 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
               Ingredients ({post.ingredients.length})
             </p>
             <IngredientsList ingredients={post.ingredients} />
-            <p className="text-2xl mt-2 font-bold">Directions</p>
+            <p className="text-2xl mt-2 mb-2 font-bold">Recipe</p>
             {
               /* Maybe render Markdown? */
-              <ReactMarkdown components={{
-                h1: ({node, ...props}) => <h1 className="text-red-700" {...props} />
-              }}remarkPlugins={[remarkGfm]}>
-                {post.content}
-              </ReactMarkdown>
+              <div className="text-xl">
+                <ReactMarkdown
+                  components={{
+                    h1: ({node, ...props}) => <h1 className="text-4xl" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-3xl" {...props} />,
+                    h3: ({node, ...props}) => <h2 className="text-2xl" {...props} />,
+                    li: ({ node, ordered, checked, index, ...props }) => (
+                      <label className="cursor-pointer">
+                        <li {...props} />
+                      </label>
+                    ),
+                    input: ({
+                      node,
+                      disabled = false,
+                      checked = false,
+                      ...props
+                    }) => <input {...props} />,
+                    table: (node, ...props) => <table className="w-full text-lg text-left text-gray-500 dark:text-gray-400" onClick={() => console.log(node, ...props)}>{node.children}</table>,
+                    thead: (node, ...props) => <thead className="text-lg text-gray-700 uppercase bg-slate-200 dark:bg-gray-700 dark:text-gray-400" >{node.children}</thead>,
+                    tbody: (node, ...props) => <tbody className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">{node.children}</tbody>,
+                    img: (node, ...props) =>   <Image src={node.src as string}  layout="responsive" height="427px" width="640px" alt={node.alt}/>
+                  }}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {post.content}
+                </ReactMarkdown>
+              </div>
             }
             {/* <div className="mt-3">{post.content}</div> */}
           </div>
