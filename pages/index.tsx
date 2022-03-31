@@ -8,7 +8,7 @@ import Search from "../components/Search";
 import Tile from "../components/Tile";
 import NoRecpie from "../components/NoRecipe";
 import Layout from "../components/Layout";
-import { ModifiedFeed, Post } from "../lib/interfaces";
+import { Post } from "../lib/interfaces";
 export const getStaticProps: GetStaticProps = async () => {
   const feed = await getAllPosts();
   return { props: { feed } };
@@ -19,7 +19,6 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ feed }) => {
-  console.log(feed)
   const [filteredFeed, setFilteredFeed] = useState(feed);
   const [filter, setFilter] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
