@@ -1,6 +1,6 @@
 import { Post } from "../lib/interfaces";
 
-export async function saveToDB(method: string, id?: number, payload?: Post) {
+export async function saveToDB(method: string, id?: number, payload?: any) {
   console.log("clicked submitted");
   try {
     let fetchUrl = "/api/";
@@ -15,23 +15,21 @@ export async function saveToDB(method: string, id?: number, payload?: Post) {
       fetchUrl = `/api/update/${id}`;
     }
     let response = await fetch(fetchUrl, {
-      method: "DELETE",
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
     let result = await response.json();
     if (response.status === 403) {
       throw Error("You need to be logged in to post a new recipe.");
-    }
-    if (response.status === 500) {
+    } else if (response.status === 500) {
       throw Error("Database Error");
-    }
-    if (response.status === 200) {
+    } else if (response.status === 200) {
       return result;
     } else {
       throw Error("Something went wrong");
     }
   } catch (error: any) {
-    throw Error("Something went wrong");
+    throw Error(error);
   }
 }
