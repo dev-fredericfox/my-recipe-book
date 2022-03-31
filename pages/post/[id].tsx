@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getAllPostIds } from "../../lib/getPostIds";
 import { getPost } from "../../lib/getPost";
 import Layout from "../../components/Layout";
@@ -11,7 +12,7 @@ import IngredientsList from "../../components/IngredientsList";
 import { Post } from "../../lib/interfaces";
 
 interface Props {
-  postData: Post[]
+  postData: Post[];
 }
 
 const BlogPost: NextPage<Props> = ({ postData }) => {
@@ -55,7 +56,11 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
             <p className="text-2xl mt-2 font-bold">Directions</p>
             {
               /* Maybe render Markdown? */
-              <ReactMarkdown>{post.content}</ReactMarkdown>
+              <ReactMarkdown components={{
+                h1: ({node, ...props}) => <h1 className="text-red-700" {...props} />
+              }}remarkPlugins={[remarkGfm]}>
+                {post.content}
+              </ReactMarkdown>
             }
             {/* <div className="mt-3">{post.content}</div> */}
           </div>
