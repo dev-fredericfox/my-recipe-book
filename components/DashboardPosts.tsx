@@ -27,9 +27,9 @@ export default function DashboardPosts({ post }: Props) {
       const postsMinusDeleted = cache.filter(el => el.id !== id)
       setPosts(postsMinusDeleted)
       setInProgressDeletionColor(null)
-    } catch(error) {
+    } catch(error:any) {
       setFetchResult("Failed");
-      setFetchError(error as string)
+      setFetchError(error.message)
     }
   };
 
