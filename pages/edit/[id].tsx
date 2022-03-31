@@ -10,16 +10,11 @@ import CategoryDropdown from "../../components/CategoryDropdown";
 import AddCategoryModal from "../../components/AddCategoryModal";
 import { Category, Post } from "../../lib/interfaces";
 import { getPost } from "../../lib/getPost";
+import { saveToDB } from "../../lib/fetchHelper";
 
-interface Params {
-  params: Id;
-}
-
-interface Id {
-  id: string;
-}
-
-export const getServerSideProps: GetServerSideProps<any> = async ({ params }:any) => {
+export const getServerSideProps: GetServerSideProps<any> = async ({
+  params,
+}: any) => {
   const postId = parseInt(params.id);
   try {
     const categories = await getAllCategories();
@@ -37,17 +32,19 @@ export const getServerSideProps: GetServerSideProps<any> = async ({ params }:any
 interface Props {
   categories: Category[];
   post: Post[];
-  postId: number
+  postId: number;
 }
 
 const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
-    console.log(postId)
+  console.log(postId);
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
   const [title, setTitle] = useState(post[0].title);
   const [coverimg, setCoverimg] = useState(post[0].coverimg);
   const [category, setCategory] = useState(post[0].category.name);
   const [content, setContent] = useState(post[0].content);
-  const [ingredients, setIngredients] = useState<Array<Ingredient>>(post[0].ingredients);
+  const [ingredients, setIngredients] = useState<Array<Ingredient>>(
+    post[0].ingredients
+  );
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
@@ -79,38 +76,16 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
       published,
       ingredients,
     };
-    console.log(body);
-    setFetchStatus("pending");
     try {
-      let response = await fetch(`/api/update/${postId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      let result = await response.json();
-      if (response.status === 403) {
-        throw Error("You need to be logged in to post a new recipe.");
-      }
-      if (response.status === 500) {
-        throw Error("Database Error");
-      }
-      if (response.status === 200) {
-        setFetchResult(result);
-        setFetchStatus("OK");
-        console.log(fetchResult);
-      } else {
-        throw Error("Something went wrong");
-      }
+      const result = await saveToDB("PUT", postId, body);
+      setFetchResult(result);
+      setFetchStatus("OK");
     } catch (error: any) {
+      setFetchResult("Failed");
+      console.log("error.message");
       setFetchError(error.message);
-      setFetchStatus("Error");
-      console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log(fetchResult);
-  // }, [fetchResult]);
 
   interface Ingredient {
     emoji: string;
@@ -149,7 +124,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "emoji", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key-1].emoji}
+          value={ingredients[key - 1].emoji}
           placeholder="Emoji"
         />
       </div>
@@ -158,7 +133,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "ingredient", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key-1].ingredient}
+          value={ingredients[key - 1].ingredient}
           placeholder="Ingredient"
         />
       </div>
@@ -167,7 +142,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "amount", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key-1].amount}
+          value={ingredients[key - 1].amount}
           placeholder="Amount"
         />
       </div>
@@ -176,7 +151,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "unit", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key-1].unit}
+          value={ingredients[key - 1].unit}
           placeholder="Unit"
         />
       </div>
