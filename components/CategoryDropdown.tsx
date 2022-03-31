@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MouseEventHandler } from "react";
 import { Category } from "../lib/interfaces";
 
