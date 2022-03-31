@@ -9,9 +9,9 @@ import Layout from "../components/Layout";
 import CategoryDropdown from "../components/CategoryDropdown";
 import AddCategoryModal from "../components/AddCategoryModal";
 import { Category } from "../lib/interfaces";
+import { saveToDB } from "../lib/fetchHelper";
 
-
-export const getServerSideProps: GetServerSideProps<any>  = async () => {
+export const getServerSideProps: GetServerSideProps<any> = async () => {
   try {
     const categories = await getAllCategories();
     return {
@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<any>  = async () => {
 };
 
 interface Props {
-  categories: Category[]
+  categories: Category[];
 }
 
 const CreatePost: NextPage<Props> = ({ categories }) => {
@@ -41,12 +41,12 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
   const [categoryArray, setCategoryArray] = useState<Category[]>(categories);
   const [addNewCategory, setAddNewCategory] = useState(false);
 
-  const appendNewlyAddedCategoryToCategoryArray = (e:Category) => {
+  const appendNewlyAddedCategoryToCategoryArray = (e: Category) => {
     console.log(e);
-    setCategory(e.name)
+    setCategory(e.name);
     const cache = [...categoryArray];
     cache.push(e);
-    console.log(cache)
+    console.log(cache);
     setCategoryArray(cache);
   };
 
@@ -60,42 +60,16 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
       published,
       ingredients,
     };
-    console.log(body);
-    setFetchStatus("pending");
     try {
-      let response = await fetch(`/api/post`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      let result = await response.json();
-      if (response.status === 403) {
-        throw Error("You need to be logged in to post a new recipe.");
-      }
-      if (response.status === 500) {
-        throw Error("Database Error");
-      }
-      if (response.status === 200) {
-        setFetchResult(result);
-        setFetchStatus("OK");
-        console.log(fetchResult);
-      } else {
-        throw Error("Something went wrong");
-      }
-    } catch (error: any) {
+      const result = await saveToDB("POST", 0, body);
+      setFetchResult(result);
+      setFetchStatus("OK");
+    } catch (error:any) {
+      setFetchResult("Failed");
+      console.log("error.message")
       setFetchError(error.message);
-      setFetchStatus("Error");
-      console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log(fetchResult);
-  // }, [fetchResult]);
-
-  // useEffect(() => {
-  //   console.log(categories);
-  // }, []);
 
   interface Ingredient {
     emoji: string;
@@ -200,16 +174,16 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
               placeholder="Cover Image"
             />
             <CategoryDropdown
-              categories={categoryArray}  
+              categories={categoryArray}
               select={(e) => setCategory(e)}
               selected={category}
-              addNewCategory={():void => setAddNewCategory(!addNewCategory)}
+              addNewCategory={(): void => setAddNewCategory(!addNewCategory)}
             />
           </div>
           {addNewCategory && (
             <AddCategoryModal
               closeModal={() => setAddNewCategory(false)}
-              addNewCategoryToDropdown={(e:Category) =>
+              addNewCategoryToDropdown={(e: Category) =>
                 appendNewlyAddedCategoryToCategoryArray(e)
               }
             />
