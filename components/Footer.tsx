@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
@@ -24,10 +23,9 @@ const inactiveSession = (
 );
 
 export default function Footer() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   return (
     <div>
-      <p>Session status: {status}</p>
       <div>{session && activeSession}</div>
       <div>{!session && inactiveSession}</div>
       {/* <div>{session}</div> */}
