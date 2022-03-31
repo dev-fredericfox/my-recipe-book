@@ -14,6 +14,8 @@ export default async function handle(
   if (session) {
     const author = { connect: { email: session?.user?.email } };
     const data = Object.assign(req.body, { author: author });
+    const connectCategory = { connect: { name: req.body.category } };
+    data.category = connectCategory
     console.log(data);
     try {
       console.log("Trying...");
