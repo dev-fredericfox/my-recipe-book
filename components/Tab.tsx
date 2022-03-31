@@ -24,7 +24,7 @@ export default function Tab({
   const cat = categories.map((el) => el.category.name);
   const [tabs, setTabs] = useState(["All"]);
   useEffect(() => {
-    const tabsCopy = [all, ...cat];
+    const tabsCopy = [all, ...new Set(cat)];
     setTabs(tabsCopy);
   }, []);
 
