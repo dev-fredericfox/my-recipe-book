@@ -4,19 +4,22 @@ import type { GetStaticProps } from "next";
 import Head from "next/head";
 import { getAllPosts } from "../lib/getAllPosts";
 import Tab from "../components/Tab";
-import Title from "../components/Tile"
 import Search from "../components/Search";
 import Tile from "../components/Tile";
 import NoRecpie from "../components/NoRecipe";
 import Layout from "../components/Layout";
-import { ModifiedFeed } from "../lib/interfaces";
-
+import { ModifiedFeed, Post } from "../lib/interfaces";
 export const getStaticProps: GetStaticProps = async () => {
   const feed = await getAllPosts();
   return { props: { feed } };
 };
 
-const Home: NextPage<ModifiedFeed> = ({ feed }) => {
+interface Props {
+  feed: Post[]
+}
+
+const Home: NextPage<Props> = ({ feed }) => {
+  console.log(feed)
   const [filteredFeed, setFilteredFeed] = useState(feed);
   const [filter, setFilter] = useState<string | null>(null);
   const [search, setSearch] = useState<string | null>(null);
