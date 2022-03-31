@@ -8,7 +8,7 @@ interface LayoutProps {
 export default function Layout({ children }:LayoutProps) {
   return (
     <div className="bg-slate-100">
-      <div className="w-10/12 mx-auto flex flex-col min-h-screen h-full pb-4">
+      <div className="w-10/12 md:w-6/12 lg:w-4/12 mx-auto flex flex-col min-h-screen h-full pb-4">
         <main className="grow">{children}</main>
         <footer className="mx-auto"><Footer/></footer>
       </div>
