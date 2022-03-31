@@ -36,7 +36,6 @@ interface Props {
 }
 
 const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
-  console.log(postId);
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
   const [title, setTitle] = useState(post[0]?.title ?? '');
   const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? '');
@@ -58,16 +57,13 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   }, []);
 
   const appendNewlyAddedCategoryToCategoryArray = (e: Category) => {
-    console.log(e);
     setCategory(e.name);
     const cache = [...categoryArray];
     cache.push(e);
-    console.log(cache);
     setCategoryArray(cache);
   };
 
   const submitData = async (published: boolean) => {
-    console.log("clicked submitted");
     const body = {
       title,
       content,

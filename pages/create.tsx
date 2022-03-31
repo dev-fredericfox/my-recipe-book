@@ -42,16 +42,13 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
   const [addNewCategory, setAddNewCategory] = useState(false);
 
   const appendNewlyAddedCategoryToCategoryArray = (e: Category) => {
-    console.log(e);
     setCategory(e.name);
     const cache = [...categoryArray];
     cache.push(e);
-    console.log(cache);
     setCategoryArray(cache);
   };
 
   const submitData = async (published: boolean) => {
-    console.log("clicked submitted");
     const body = {
       title,
       content,

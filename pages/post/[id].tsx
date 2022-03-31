@@ -75,7 +75,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                       checked = false,
                       ...props
                     }) => <input {...props} />,
-                    table: (node, ...props) => <table className="w-full text-lg text-left text-gray-500 dark:text-gray-400" onClick={() => console.log(node, ...props)}>{node.children}</table>,
+                    table: (node, ...props) => <table className="w-full text-lg text-left text-gray-500 dark:text-gray-400">{node.children}</table>,
                     thead: (node, ...props) => <thead className="text-lg text-gray-700 uppercase bg-slate-200 dark:bg-gray-700 dark:text-gray-400" >{node.children}</thead>,
                     tbody: (node, ...props) => <tbody className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">{node.children}</tbody>,
                     img: (node, ...props) =>   <Image src={node.src as string}  layout="responsive" height="427px" width="640px" alt={node.alt}/>

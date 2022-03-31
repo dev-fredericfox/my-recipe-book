@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { getAllPostsIncludingDrafts } from "../lib/getAllPostsIncludingDrafts";
 import type { NextPage } from "next";
@@ -26,7 +25,6 @@ interface Props {
 }
 
 const Dashboard: NextPage<Props> = ({ posts }) => {
-  console.log(posts);
 
   return (
     <div>
