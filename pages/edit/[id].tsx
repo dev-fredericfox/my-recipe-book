@@ -38,12 +38,12 @@ interface Props {
 const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   console.log(postId);
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
-  const [title, setTitle] = useState(post[0].title);
-  const [coverimg, setCoverimg] = useState(post[0].coverimg);
-  const [category, setCategory] = useState(post[0].category.name);
-  const [content, setContent] = useState(post[0].content);
+  const [title, setTitle] = useState(post[0]?.title ?? '');
+  const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? '');
+  const [category, setCategory] = useState(post[0]?.category.name ?? '');
+  const [content, setContent] = useState(post[0]?.content ?? '');
   const [ingredients, setIngredients] = useState<Array<Ingredient>>(
-    post[0].ingredients
+    post[0]?.ingredients ?? []
   );
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
@@ -52,7 +52,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   const [addNewCategory, setAddNewCategory] = useState(false);
 
   useEffect(() => {
-    const ingredients = post[0].ingredients;
+    const ingredients = post[0]?.ingredients ?? '';
     const countIngredients = ingredients.length;
     setAmountOfIngredients(countIngredients);
   }, []);
@@ -124,7 +124,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "emoji", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1].emoji}
+          value={ingredients[key - 1]?.emoji}
           placeholder="Emoji"
         />
       </div>
@@ -133,7 +133,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "ingredient", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1].ingredient}
+          value={ingredients[key - 1]?.ingredient}
           placeholder="Ingredient"
         />
       </div>
@@ -142,7 +142,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "amount", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1].amount}
+          value={ingredients[key - 1]?.amount}
           placeholder="Amount"
         />
       </div>
@@ -151,7 +151,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "unit", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1].unit}
+          value={ingredients[key - 1]?.unit}
           placeholder="Unit"
         />
       </div>
