@@ -6,7 +6,7 @@ return (feed.map((el) => {
     const link = `/post/${el.id}`;
     return (
       <div
-        className="h-96 relative rounded-2xl overflow-hidden mx-auto my-6"
+        className="h-64 sm:h-80 relative rounded-2xl overflow-hidden mx-auto my-6"
         key={el.id}
       >
         <Image
