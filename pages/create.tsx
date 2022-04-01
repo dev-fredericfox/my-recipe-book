@@ -11,7 +11,6 @@ import AddCategoryModal from "../components/AddCategoryModal";
 import { Category } from "../lib/interfaces";
 import { saveToDB } from "../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
-import { useSession } from "next-auth/react";
 import { getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps<any> = async ({ req }) => {
