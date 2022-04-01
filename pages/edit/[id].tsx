@@ -11,10 +11,22 @@ import AddCategoryModal from "../../components/AddCategoryModal";
 import { Category, Post } from "../../lib/interfaces";
 import { getPost } from "../../lib/getPost";
 import { saveToDB } from "../../lib/fetchHelper";
+import { CheckIcon } from "@heroicons/react/solid";
+import { getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps<any> = async ({
+  req,
   params,
 }: any) => {
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/unauthorized",
+        permanent: false,
+      },
+    };
+  }
   const postId = parseInt(params.id);
   try {
     const categories = await getAllCategories();
@@ -37,10 +49,10 @@ interface Props {
 
 const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
-  const [title, setTitle] = useState(post[0]?.title ?? '');
-  const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? '');
-  const [category, setCategory] = useState(post[0]?.category.name ?? '');
-  const [content, setContent] = useState(post[0]?.content ?? '');
+  const [title, setTitle] = useState(post[0]?.title ?? "");
+  const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? "");
+  const [category, setCategory] = useState(post[0]?.category.name ?? "");
+  const [content, setContent] = useState(post[0]?.content ?? "");
   const [ingredients, setIngredients] = useState<Array<Ingredient>>(
     post[0]?.ingredients ?? []
   );
@@ -51,7 +63,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   const [addNewCategory, setAddNewCategory] = useState(false);
 
   useEffect(() => {
-    const ingredients = post[0]?.ingredients ?? '';
+    const ingredients = post[0]?.ingredients ?? "";
     const countIngredients = ingredients.length;
     setAmountOfIngredients(countIngredients);
   }, []);
@@ -231,7 +243,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           click={() => submitData(false)}
         />
         <GenericGreenButton text="Update Post" click={() => submitData(true)} />
-        <p>{fetchStatus}</p>
+        <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
         <p>{fetchError}</p>
       </Layout>
     </div>

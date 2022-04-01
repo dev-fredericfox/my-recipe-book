@@ -6,8 +6,18 @@ import Head from "next/head";
 import Title from "../components/Title";
 import Layout from "../components/Layout";
 import DashboardPosts from "../components/DashboardPosts";
+import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps<any> = async () => {
+export const getServerSideProps: GetServerSideProps<any> = async ({req}) => {
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/unauthorized",
+        permanent: false,
+      },
+    };
+  }
   try {
     const posts = await getAllPostsIncludingDrafts();
     return {

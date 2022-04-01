@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import { getAllCategories } from "../lib/getAllCategories";
 import type { NextPage } from "next";
@@ -10,8 +10,20 @@ import CategoryDropdown from "../components/CategoryDropdown";
 import AddCategoryModal from "../components/AddCategoryModal";
 import { Category } from "../lib/interfaces";
 import { saveToDB } from "../lib/fetchHelper";
+import { CheckIcon } from "@heroicons/react/solid";
+import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps<any> = async () => {
+export const getServerSideProps: GetServerSideProps<any> = async ({ req }) => {
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/unauthorized",
+        permanent: false,
+      },
+    };
+  }
   try {
     const categories = await getAllCategories();
     return {
@@ -61,9 +73,9 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
       const result = await saveToDB("POST", 0, body);
       setFetchResult(result);
       setFetchStatus("OK");
-    } catch (error:any) {
+    } catch (error: any) {
       setFetchResult("Failed");
-      console.log("error.message")
+      console.log("error.message");
       setFetchError(error.message);
     }
   };
@@ -142,7 +154,6 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
     }
     return rows;
   };
-
   return (
     <div>
       <Head>
@@ -209,7 +220,7 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
           click={() => submitData(false)}
         />
         <GenericGreenButton text="Publish" click={() => submitData(true)} />
-        <p>{fetchStatus}</p>
+        <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
         <p>{fetchError}</p>
       </Layout>
     </div>
