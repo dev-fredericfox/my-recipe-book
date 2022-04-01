@@ -6,6 +6,7 @@ import { getAllPosts } from "../lib/getAllPosts";
 import Tab from "../components/Tab";
 import Search from "../components/Search";
 import Tile from "../components/Tile";
+import Title from "../components/Title";
 import NoRecpie from "../components/NoRecipe";
 import Layout from "../components/Layout";
 import { Post } from "../lib/interfaces";
@@ -15,7 +16,7 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 interface Props {
-  feed: Post[]
+  feed: Post[];
 }
 
 const Home: NextPage<Props> = ({ feed }) => {
@@ -49,9 +50,9 @@ const Home: NextPage<Props> = ({ feed }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1 className="text-2xl text-center font-bold pt-12 pb-6">
-          Freds Cooking Corner
-        </h1>
+        <div className="pt-12 pb-6">
+          <Title title="Freds Cooking Corner" />
+        </div>
         <Search searchFunction={setSearch} />
         <div className="flex flex-row">
           <Tab
@@ -62,8 +63,7 @@ const Home: NextPage<Props> = ({ feed }) => {
         </div>
         <div>
           {filteredFeed.length > 0 && <Tile feed={filteredFeed} />}
-          {filteredFeed.length === 0 && <NoRecpie/>}
-          
+          {filteredFeed.length === 0 && <NoRecpie />}
         </div>
       </Layout>
     </div>
