@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Router from "next/router";
+
 import { signOut, useSession } from "next-auth/react";
 
 const dash = <span className="mx-2">-</span>;
@@ -13,7 +15,7 @@ const activeSession = (
       <Link href="/admin/create">New Post</Link>
     </div>
     {dash}
-    <div onClick={() => signOut()}>Logout</div>
+    <div className="cursor-pointer" onClick={() => signOut().then(() => Router.push("/"))}>Logout</div>
   </div>
 );
 
