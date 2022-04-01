@@ -11,8 +11,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       cookie: req.headers.get("cookie"),
     },
   };
-
-  const session = await getSession({ req: requestForNextAuth });
+  const session = await getSession({ req: requestForNextAuth as unknown as any});
 
   if (session) {
     console.log(session);
