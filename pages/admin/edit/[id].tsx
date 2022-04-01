@@ -12,21 +12,11 @@ import { Category, Post } from "../../../lib/interfaces";
 import { getPost } from "../../../lib/getPost";
 import { saveToDB } from "../../../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
-import { getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps<any> = async ({
   req,
   params,
 }: any) => {
-  const session = await getSession({ req });
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/unauthorized",
-        permanent: false,
-      },
-    };
-  }
   const postId = parseInt(params.id);
   try {
     const categories = await getAllCategories();
