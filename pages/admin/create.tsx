@@ -4,6 +4,7 @@ import { getAllCategories } from "../../lib/getAllCategories";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Title from "../../components/Title";
+import AccessDenied from "../../components/AccessDenied";
 import GenericGreenButton from "../../components/GenericGreenButton";
 import Layout from "../../components/Layout";
 import CategoryDropdown from "../../components/CategoryDropdown";
@@ -11,12 +12,13 @@ import AddCategoryModal from "../../components/AddCategoryModal";
 import { Category } from "../../lib/interfaces";
 import { saveToDB } from "../../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
+import { useSession, getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps<any> = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps<any> = async (context) => {
   try {
     const categories = await getAllCategories();
     return {
-      props: { categories },
+      props: { categories, session: await getSession(context) },
     };
   } catch (error) {
     return {
@@ -30,6 +32,7 @@ interface Props {
 }
 
 const CreatePost: NextPage<Props> = ({ categories }) => {
+  const { data: session } = useSession();
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
   const [title, setTitle] = useState("");
   const [coverimg, setCoverimg] = useState("");
@@ -143,77 +146,82 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
     }
     return rows;
   };
-  return (
-    <div>
-      <Head>
-        <title>Add Recipe</title>
-        <meta name="description" content="Add Recipe" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Layout>
-        <div>
-          <div className="mt-6">
-            <Title title="New Recipe" />
+  if (typeof window === "undefined") return null;
+
+  if (session) {
+    return (
+      <div>
+        <Head>
+          <title>Add Recipe</title>
+          <meta name="description" content="Add Recipe" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Layout>
+          <div>
+            <div className="mt-6">
+              <Title title="New Recipe" />
+            </div>
+            <div className="mt-6">
+              <input
+                onChange={(e) => setTitle(e.target.value)}
+                className="rounded-lg pl-5 w-full h-12 px-2"
+                type="text"
+                placeholder="Recipe Name"
+              />
+            </div>
+            <div className="flex flex-row mt-2">
+              <input
+                onChange={(e) => setCoverimg(e.target.value)}
+                className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
+                type="text"
+                placeholder="Cover Image"
+              />
+              <CategoryDropdown
+                categories={categoryArray}
+                select={(e) => setCategory(e)}
+                selected={category}
+                addNewCategory={(): void => setAddNewCategory(!addNewCategory)}
+              />
+            </div>
+            {addNewCategory && (
+              <AddCategoryModal
+                closeModal={() => setAddNewCategory(false)}
+                addNewCategoryToDropdown={(e: Category) =>
+                  appendNewlyAddedCategoryToCategoryArray(e)
+                }
+              />
+            )}
+            {ingredientRow(amountOfIngredients)}
+            <div className="flex flex-row">
+              <GenericGreenButton
+                text="Add Ingredient"
+                click={() => setAmountOfIngredients(amountOfIngredients + 1)}
+              />
+              <GenericGreenButton
+                text="Remove Ingredient"
+                click={() => removeIngredientAndPopArray()}
+              />
+            </div>
+            <div className="mt-6">
+              <textarea
+                onChange={(e) => setContent(e.target.value)}
+                className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
+                placeholder="Recipe Instructions"
+              />
+            </div>
           </div>
-          <div className="mt-6">
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2"
-              type="text"
-              placeholder="Recipe Name"
-            />
-          </div>
-          <div className="flex flex-row mt-2">
-            <input
-              onChange={(e) => setCoverimg(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
-              type="text"
-              placeholder="Cover Image"
-            />
-            <CategoryDropdown
-              categories={categoryArray}
-              select={(e) => setCategory(e)}
-              selected={category}
-              addNewCategory={(): void => setAddNewCategory(!addNewCategory)}
-            />
-          </div>
-          {addNewCategory && (
-            <AddCategoryModal
-              closeModal={() => setAddNewCategory(false)}
-              addNewCategoryToDropdown={(e: Category) =>
-                appendNewlyAddedCategoryToCategoryArray(e)
-              }
-            />
-          )}
-          {ingredientRow(amountOfIngredients)}
-          <div className="flex flex-row">
-            <GenericGreenButton
-              text="Add Ingredient"
-              click={() => setAmountOfIngredients(amountOfIngredients + 1)}
-            />
-            <GenericGreenButton
-              text="Remove Ingredient"
-              click={() => removeIngredientAndPopArray()}
-            />
-          </div>
-          <div className="mt-6">
-            <textarea
-              onChange={(e) => setContent(e.target.value)}
-              className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
-              placeholder="Recipe Instructions"
-            />
-          </div>
-        </div>
-        <GenericGreenButton
-          text="Save as Draft"
-          click={() => submitData(false)}
-        />
-        <GenericGreenButton text="Publish" click={() => submitData(true)} />
-        <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
-        <p>{fetchError}</p>
-      </Layout>
-    </div>
-  );
+          <GenericGreenButton
+            text="Save as Draft"
+            click={() => submitData(false)}
+          />
+          <GenericGreenButton text="Publish" click={() => submitData(true)} />
+          <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
+          <p>{fetchError}</p>
+        </Layout>
+      </div>
+    );
+  }
+  return <AccessDenied />;
 };
 
 export default CreatePost;

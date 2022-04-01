@@ -4,6 +4,7 @@ import { getAllCategories } from "../../../lib/getAllCategories";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Title from "../../../components/Title";
+import AccessDenied from "../../../components/AccessDenied";
 import GenericGreenButton from "../../../components/GenericGreenButton";
 import Layout from "../../../components/Layout";
 import CategoryDropdown from "../../../components/CategoryDropdown";
@@ -12,6 +13,7 @@ import { Category, Post } from "../../../lib/interfaces";
 import { getPost } from "../../../lib/getPost";
 import { saveToDB } from "../../../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
+import { useSession, getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps<any> = async ({
   req,
@@ -22,7 +24,7 @@ export const getServerSideProps: GetServerSideProps<any> = async ({
     const categories = await getAllCategories();
     const post = await getPost(postId);
     return {
-      props: { categories, post, postId },
+      props: { categories, post, postId, session: await getSession(req) },
     };
   } catch (error) {
     return {
@@ -38,6 +40,7 @@ interface Props {
 }
 
 const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
+  const { data: session } = useSession();
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
   const [title, setTitle] = useState(post[0]?.title ?? "");
   const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? "");
@@ -164,80 +167,87 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     return rows;
   };
 
-  return (
-    <div>
-      <Head>
-        <title>Add Recipe</title>
-        <meta name="description" content="Add Recipe" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Layout>
-        <div>
-          <div className="mt-6">
-            <Title title="New Recipe" />
+  if (typeof window === "undefined") return null;
+  if (session) {
+    return (
+      <div>
+        <Head>
+          <title>Add Recipe</title>
+          <meta name="description" content="Add Recipe" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Layout>
+          <div>
+            <div className="mt-6">
+              <Title title="New Recipe" />
+            </div>
+            <div className="mt-6">
+              <input
+                onChange={(e) => setTitle(e.target.value)}
+                className="rounded-lg pl-5 w-full h-12 px-2"
+                type="text"
+                value={title}
+                placeholder="Recipe Name"
+              />
+            </div>
+            <div className="flex flex-row mt-2">
+              <input
+                onChange={(e) => setCoverimg(e.target.value)}
+                className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
+                type="text"
+                value={coverimg}
+                placeholder="Cover Image"
+              />
+              <CategoryDropdown
+                categories={categoryArray}
+                select={(e) => setCategory(e)}
+                selected={category}
+                addNewCategory={(): void => setAddNewCategory(!addNewCategory)}
+              />
+            </div>
+            {addNewCategory && (
+              <AddCategoryModal
+                closeModal={() => setAddNewCategory(false)}
+                addNewCategoryToDropdown={(e: Category) =>
+                  appendNewlyAddedCategoryToCategoryArray(e)
+                }
+              />
+            )}
+            {ingredientRow(amountOfIngredients)}
+            <div className="flex flex-row">
+              <GenericGreenButton
+                text="Add Ingredient"
+                click={() => setAmountOfIngredients(amountOfIngredients + 1)}
+              />
+              <GenericGreenButton
+                text="Remove Ingredient"
+                click={() => removeIngredientAndPopArray()}
+              />
+            </div>
+            <div className="mt-6">
+              <textarea
+                onChange={(e) => setContent(e.target.value)}
+                className="rounded-lg pt-2 pl-5 w-full h-48 px-2"
+                value={content}
+                placeholder="Recipe Instructions"
+              />
+            </div>
           </div>
-          <div className="mt-6">
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2"
-              type="text"
-              value={title}
-              placeholder="Recipe Name"
-            />
-          </div>
-          <div className="flex flex-row mt-2">
-            <input
-              onChange={(e) => setCoverimg(e.target.value)}
-              className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
-              type="text"
-              value={coverimg}
-              placeholder="Cover Image"
-            />
-            <CategoryDropdown
-              categories={categoryArray}
-              select={(e) => setCategory(e)}
-              selected={category}
-              addNewCategory={(): void => setAddNewCategory(!addNewCategory)}
-            />
-          </div>
-          {addNewCategory && (
-            <AddCategoryModal
-              closeModal={() => setAddNewCategory(false)}
-              addNewCategoryToDropdown={(e: Category) =>
-                appendNewlyAddedCategoryToCategoryArray(e)
-              }
-            />
-          )}
-          {ingredientRow(amountOfIngredients)}
-          <div className="flex flex-row">
-            <GenericGreenButton
-              text="Add Ingredient"
-              click={() => setAmountOfIngredients(amountOfIngredients + 1)}
-            />
-            <GenericGreenButton
-              text="Remove Ingredient"
-              click={() => removeIngredientAndPopArray()}
-            />
-          </div>
-          <div className="mt-6">
-            <textarea
-              onChange={(e) => setContent(e.target.value)}
-              className="rounded-lg pt-2 pl-5 w-full h-48 px-2"
-              value={content}
-              placeholder="Recipe Instructions"
-            />
-          </div>
-        </div>
-        <GenericGreenButton
-          text="Update and save as Draft"
-          click={() => submitData(false)}
-        />
-        <GenericGreenButton text="Update Post" click={() => submitData(true)} />
-        <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
-        <p>{fetchError}</p>
-      </Layout>
-    </div>
-  );
+          <GenericGreenButton
+            text="Update and save as Draft"
+            click={() => submitData(false)}
+          />
+          <GenericGreenButton
+            text="Update Post"
+            click={() => submitData(true)}
+          />
+          <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
+          <p>{fetchError}</p>
+        </Layout>
+      </div>
+    );
+  }
+  return <AccessDenied/>
 };
 
 export default EditPost;
