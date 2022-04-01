@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ['i.imgur.com'],
   },
+  future: { webpack5: true }
 }
 
 module.exports = nextConfig
