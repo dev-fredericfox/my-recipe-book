@@ -21,7 +21,7 @@ export default async function handle(
       console.log("result");
       console.log(result);
       res.status(200).json(result);
-    } catch (error) {
+    } catch (error:any) {
       if (error.code === "P2002") {
         res.status(510).send({
           message: "Duplicate Category",
