@@ -4,6 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkUnwrapImages from "remark-unwrap-images";
 import { getAllPostIds } from "../../lib/getPostIds";
 import { getPost } from "../../lib/getPost";
 import Layout from "../../components/Layout";
@@ -18,7 +19,6 @@ interface Props {
 
 const BlogPost: NextPage<Props> = ({ postData }) => {
   const post = postData[0];
-  const [checkedBox, setCheckedBox] = useState([]);
 
   return (
     <div>
@@ -41,12 +41,11 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
               </h1>
             </div>
           </div>
-          <div className="rounded-2xl overflow-hidden shadow-md">
+          <div className="h-44 sm:h-60 relative rounded-2xl overflow-hidden mx-auto my-6">
             <Image
               src={post.coverimg}
-              layout="responsive"
-              height="427px"
-              width="640px"
+              layout="fill"
+              objectFit="cover"
               alt={post.title}
             />
           </div>
@@ -61,9 +60,15 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
               <div className="text-xl">
                 <ReactMarkdown
                   components={{
-                    h1: ({node, ...props}) => <h1 className="text-4xl" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-3xl" {...props} />,
-                    h3: ({node, ...props}) => <h2 className="text-2xl" {...props} />,
+                    h1: ({ node, ...props }) => (
+                      <h1 className="text-4xl" {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2 className="text-3xl" {...props} />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h2 className="text-2xl" {...props} />
+                    ),
                     li: ({ node, ordered, checked, index, ...props }) => (
                       <label className="cursor-pointer">
                         <li {...props} />
@@ -75,12 +80,35 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                       checked = false,
                       ...props
                     }) => <input {...props} />,
-                    table: (node, ...props) => <table className="w-full text-lg text-left text-gray-500 dark:text-gray-400">{node.children}</table>,
-                    thead: (node, ...props) => <thead className="text-lg text-gray-700 uppercase bg-slate-200 dark:bg-gray-700 dark:text-gray-400" >{node.children}</thead>,
-                    tbody: (node, ...props) => <tbody className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">{node.children}</tbody>,
-                    img: (node, ...props) =>   <Image src={node.src as string}  layout="responsive" height="427px" width="640px" alt={node.alt}/>
+                    table: (node, ...props) => (
+                      <table className="w-full text-lg text-left text-gray-500 dark:text-gray-400">
+                        {node.children}
+                      </table>
+                    ),
+                    thead: (node, ...props) => (
+                      <thead className="text-lg text-gray-700 uppercase bg-slate-200 dark:bg-gray-700 dark:text-gray-400">
+                        {node.children}
+                      </thead>
+                    ),
+                    tbody: (node, ...props) => (
+                      <tbody className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        {node.children}
+                      </tbody>
+                    ),
+                    img: (node, ...props) => (
+                      <div className="h-60 relative rounded-2xl overflow-hidden mx-auto my-6">
+                        {" "}
+                        <Image
+                          className="h-60 relative rounded-2xl overflow-hidden mx-auto my-6"
+                          src={node.src as string}
+                          layout="fill"
+                          objectFit="cover"
+                          alt={node.alt}
+                        />
+                      </div>
+                    ),
                   }}
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkUnwrapImages]}
                 >
                   {post.content}
                 </ReactMarkdown>
