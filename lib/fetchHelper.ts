@@ -1,6 +1,3 @@
-import { Post } from "../lib/interfaces";
-import { revalidateNow } from "./revalidateHelper";
-
 export async function saveToDB(method: string, id?: number, payload?: any) {
   console.log("clicked submitted");
   let fetchUrl = "/api/";
@@ -23,11 +20,10 @@ export async function saveToDB(method: string, id?: number, payload?: any) {
     });
     let result = await response.json();
     if (response.status === 403) {
-      throw Error("You need to be logged in to post a new recipe.");
+      throw Error("You are not allowed to perform this action.");
     } else if (response.status === 500) {
       throw Error("Database Error");
     } else if (response.status === 200) {
-      let revalidation = await revalidateNow()
       return result;
     } else {
       throw Error("Something went wrong");

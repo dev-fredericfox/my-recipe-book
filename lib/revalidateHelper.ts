@@ -1,7 +1,5 @@
-import { env } from "process";
-
 export async function revalidateNow() {
-  const fetchUrl = `${env.HOSTNAME}/api/revalidate?secret=${env.REVALIDATE_SECRET}`;
+  const fetchUrl = `${process.env.HOSTNAME}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}`;
   console.log(fetchUrl);
   try {
     let response = await fetch(fetchUrl, {
