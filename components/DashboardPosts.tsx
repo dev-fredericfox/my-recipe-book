@@ -45,7 +45,7 @@ export default function DashboardPosts({ post }: Props) {
           </div>
           <div className="grow px-2 py-3">
             <span className="font-bold text-lg">
-              <Link href={`/edit/${el.id}`}>{el.title}</Link>
+              <Link href={`/admin/edit/${el.id}`}>{el.title}</Link>
             </span>
           </div>
           <div className="flex flex-row py-3 px-2">

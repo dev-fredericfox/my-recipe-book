@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { GetServerSideProps } from "next";
 import { getAllCategories } from "../../lib/getAllCategories";
 import type { NextPage } from "next";
@@ -8,16 +8,12 @@ import GenericGreenButton from "../../components/GenericGreenButton";
 import Layout from "../../components/Layout";
 import CategoryDropdown from "../../components/CategoryDropdown";
 import AddCategoryModal from "../../components/AddCategoryModal";
-import { Category, Post } from "../../lib/interfaces";
-import { getPost } from "../../lib/getPost";
+import { Category } from "../../lib/interfaces";
 import { saveToDB } from "../../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
 import { getSession } from "next-auth/react";
 
-export const getServerSideProps: GetServerSideProps<any> = async ({
-  req,
-  params,
-}: any) => {
+export const getServerSideProps: GetServerSideProps<any> = async ({ req }) => {
   const session = await getSession({ req });
   if (!session) {
     return {
@@ -27,12 +23,10 @@ export const getServerSideProps: GetServerSideProps<any> = async ({
       },
     };
   }
-  const postId = parseInt(params.id);
   try {
     const categories = await getAllCategories();
-    const post = await getPost(postId);
     return {
-      props: { categories, post, postId },
+      props: { categories },
     };
   } catch (error) {
     return {
@@ -43,30 +37,20 @@ export const getServerSideProps: GetServerSideProps<any> = async ({
 
 interface Props {
   categories: Category[];
-  post: Post[];
-  postId: number;
 }
 
-const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
+const CreatePost: NextPage<Props> = ({ categories }) => {
   const [amountOfIngredients, setAmountOfIngredients] = useState(1);
-  const [title, setTitle] = useState(post[0]?.title ?? "");
-  const [coverimg, setCoverimg] = useState(post[0]?.coverimg ?? "");
-  const [category, setCategory] = useState(post[0]?.category.name ?? "");
-  const [content, setContent] = useState(post[0]?.content ?? "");
-  const [ingredients, setIngredients] = useState<Array<Ingredient>>(
-    post[0]?.ingredients ?? []
-  );
+  const [title, setTitle] = useState("");
+  const [coverimg, setCoverimg] = useState("");
+  const [category, setCategory] = useState("");
+  const [content, setContent] = useState("");
+  const [ingredients, setIngredients] = useState<Array<Ingredient>>([]);
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
   const [categoryArray, setCategoryArray] = useState<Category[]>(categories);
   const [addNewCategory, setAddNewCategory] = useState(false);
-
-  useEffect(() => {
-    const ingredients = post[0]?.ingredients ?? "";
-    const countIngredients = ingredients.length;
-    setAmountOfIngredients(countIngredients);
-  }, []);
 
   const appendNewlyAddedCategoryToCategoryArray = (e: Category) => {
     setCategory(e.name);
@@ -85,7 +69,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
       ingredients,
     };
     try {
-      const result = await saveToDB("PUT", postId, body);
+      const result = await saveToDB("POST", 0, body);
       setFetchResult(result);
       setFetchStatus("OK");
     } catch (error: any) {
@@ -132,7 +116,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "emoji", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1]?.emoji}
           placeholder="Emoji"
         />
       </div>
@@ -141,7 +124,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "ingredient", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1]?.ingredient}
           placeholder="Ingredient"
         />
       </div>
@@ -150,7 +132,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "amount", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1]?.amount}
           placeholder="Amount"
         />
       </div>
@@ -159,7 +140,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           onChange={(e) => addIngredients(e.target.value, "unit", key)}
           className="rounded-lg pl-5 w-full h-12 px-2"
           type="text"
-          value={ingredients[key - 1]?.unit}
           placeholder="Unit"
         />
       </div>
@@ -173,7 +153,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     }
     return rows;
   };
-
   return (
     <div>
       <Head>
@@ -191,7 +170,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
               onChange={(e) => setTitle(e.target.value)}
               className="rounded-lg pl-5 w-full h-12 px-2"
               type="text"
-              value={title}
               placeholder="Recipe Name"
             />
           </div>
@@ -200,7 +178,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
               onChange={(e) => setCoverimg(e.target.value)}
               className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
               type="text"
-              value={coverimg}
               placeholder="Cover Image"
             />
             <CategoryDropdown
@@ -232,17 +209,16 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           <div className="mt-6">
             <textarea
               onChange={(e) => setContent(e.target.value)}
-              className="rounded-lg pt-2 pl-5 w-full h-48 px-2"
-              value={content}
+              className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
               placeholder="Recipe Instructions"
             />
           </div>
         </div>
         <GenericGreenButton
-          text="Update and save as Draft"
+          text="Save as Draft"
           click={() => submitData(false)}
         />
-        <GenericGreenButton text="Update Post" click={() => submitData(true)} />
+        <GenericGreenButton text="Publish" click={() => submitData(true)} />
         <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
         <p>{fetchError}</p>
       </Layout>
@@ -250,4 +226,4 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
   );
 };
 
-export default EditPost;
+export default CreatePost;
