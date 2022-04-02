@@ -19,6 +19,22 @@ interface Props {
 
 const BlogPost: NextPage<Props> = ({ postData }) => {
   const post = postData[0];
+  const [ingredientFactor, setIngredientFactor] = useState(1);
+
+  const ingredientMultiplication = (n: string) => {
+    const parsed = parseFloat(n);
+    console.log(typeof parsed);
+    console.log(parsed);
+    if (typeof parsed !== "number") {
+      setIngredientFactor(1);
+    } else if (isNaN(parsed)) {
+      setIngredientFactor(1);
+    } else if (parsed === 0) {
+      setIngredientFactor(1);
+    } else {
+      setIngredientFactor(parsed);
+    }
+  };
 
   return (
     <div>
@@ -53,7 +69,20 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
             <p className="text-2xl font-bold">
               Ingredients ({post.ingredients.length})
             </p>
-            <IngredientsList ingredients={post.ingredients} />
+
+            <IngredientsList
+              ingredients={post.ingredients}
+              factor={ingredientFactor}
+            />
+            <div className="flex flex-row-reverse mt-6 mb-4">
+              <input
+                onChange={(e) => ingredientMultiplication(e.target.value)}
+                className="rounded-lg pl-5 w-2/6 h-12 px-2 mr-2"
+                type="number"
+                placeholder="1"
+              />
+              <span className="text-xl mt-2 mr-2">Ingredient ratio: </span>
+            </div>
             <p className="text-2xl mt-2 mb-2 font-bold">Recipe</p>
             {
               /* Maybe render Markdown? */

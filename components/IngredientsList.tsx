@@ -1,5 +1,6 @@
 interface Ingredients {
   ingredients: Ingredient[]
+  factor: number
 }
 interface Ingredient {
   amount: string,
@@ -8,7 +9,7 @@ interface Ingredient {
   unit: string
 }
 
-export default function IngredientsList({ ingredients }: Ingredients) { 
+export default function IngredientsList({ ingredients, factor }: Ingredients) { 
   return (
     <div>
       {ingredients.map( (el, key:number) => (
@@ -20,7 +21,7 @@ export default function IngredientsList({ ingredients }: Ingredients) {
                 <span className="font-bold text-lg">{el.ingredient}</span>
               </div>
               <div className="py-3 px-2">
-                <span className="text-center text-gray-500">{el.amount}</span>
+                <span className="text-center text-gray-500">{parseFloat(el.amount)*factor}</span>
                 <span className="text-center text-gray-500"> {el.unit}</span>
               </div>
             </div>
