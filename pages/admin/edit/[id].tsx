@@ -83,7 +83,6 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
       setFetchStatus("OK");
     } catch (error: any) {
       setFetchResult("Failed");
-      console.log("error.message");
       setFetchError(error.message);
     }
   };

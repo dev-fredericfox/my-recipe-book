@@ -3,8 +3,6 @@ import { getSession } from "next-auth/react";
 
 export default async function foo(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
-  console.log("I WAS INVOKED")
-  console.log(session)
   if (session) {
     res.send({
       content:

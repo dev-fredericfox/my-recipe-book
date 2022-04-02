@@ -39,12 +39,10 @@ export default function AddCategoryModal({
   const [fetchStatus, setFetchStatus] = useState("");
 
   const submitData = async () => {
-    console.log("clicked submitted");
     const body = {
       name: category,
       categoryEmoji: emoji,
     };
-    console.log(body);
     setFetchStatus("pending");
     try {
       let response = await fetch(`/api/post/addCategory`, {

@@ -1,5 +1,4 @@
 export async function saveToDB(method: string, id?: number, payload?: any) {
-  console.log("clicked submitted");
   let fetchUrl = "/api/";
   let body = payload ?? "";
 
@@ -19,7 +18,6 @@ export async function saveToDB(method: string, id?: number, payload?: any) {
       body: JSON.stringify(body),
     });
     let result = await response.json();
-    console.log(result)
     if (result.error) {
       throw Error(result.error);
     }

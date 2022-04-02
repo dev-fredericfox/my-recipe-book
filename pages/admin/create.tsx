@@ -67,7 +67,6 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
       setFetchStatus("OK");
     } catch (error: any) {
       setFetchResult("Failed");
-      console.log("error.message");
       setFetchError(error.message);
     }
   };

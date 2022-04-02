@@ -12,7 +12,6 @@ const Debug: NextPage = () => {
         headers: { "Content-Type": "application/json" },
       });
       let e = await response.json()
-      console.log(e)
       setDebugInfo(JSON.stringify(e));
       return response;
     } catch (error) {

@@ -25,7 +25,6 @@ export default async function handle(
         const data = Object.assign(req.body, { author: author });
         const connectCategory = { connect: { name: req.body.category } };
         data.category = connectCategory;
-        console.log(data);
         const result = await prisma.post.create({
           data: data,
         });
