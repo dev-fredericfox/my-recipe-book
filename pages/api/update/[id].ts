@@ -14,9 +14,11 @@ export default async function handle(
   const session = await getSession({ req });
   const postId = parseInt(req.query.id as string);
 
+  let userTemp
   if (session) {
     try {
       let user = await getUser(session?.user?.email);
+      userTemp = user
       if (!user[0].authorizedToPublish) {
         throw 402;
       } else {
@@ -38,8 +40,8 @@ export default async function handle(
       }
     } catch (error) {
       if (error === 402) {
-        res.status(403).send({
-          message: "You do not have the permission to perform this action.",
+        res.status(200).json({
+          error: `You do not have the permission to perform this action. ${JSON.stringify(userTemp)}`,
         });
       } else {
         res.status(500).send({

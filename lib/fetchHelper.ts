@@ -19,6 +19,10 @@ export async function saveToDB(method: string, id?: number, payload?: any) {
       body: JSON.stringify(body),
     });
     let result = await response.json();
+    console.log(result)
+    if (result.error) {
+      throw Error(result.error);
+    }
     if (response.status === 403) {
       throw Error("You are not allowed to perform this action.");
     } else if (response.status === 500) {
