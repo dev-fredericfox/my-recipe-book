@@ -8,7 +8,7 @@ const Debug: NextPage = () => {
   const doFetch = async () => {
     try {
       let response = await fetch("/api/debug", {
-        method: "POST",
+        method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       let e = await response.json()
