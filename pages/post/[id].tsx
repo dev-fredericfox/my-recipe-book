@@ -23,8 +23,6 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
 
   const ingredientMultiplication = (n: string) => {
     const parsed = parseFloat(n);
-    console.log(typeof parsed);
-    console.log(parsed);
     if (typeof parsed !== "number") {
       setIngredientFactor(1);
     } else if (isNaN(parsed)) {
@@ -77,8 +75,10 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
             <div className="flex flex-row-reverse mt-6 mb-4">
               <input
                 onChange={(e) => ingredientMultiplication(e.target.value)}
-                className="rounded-lg pl-5 w-2/6 h-12 px-2 mr-2"
+                className="rounded-lg pl-5 w-20 h-12 px-2 mr-2"
                 type="number"
+                inputMode="numeric" 
+                pattern="[0-9]*"
                 placeholder="1"
               />
               <span className="text-xl mt-2 mr-2">Ingredient ratio: </span>
