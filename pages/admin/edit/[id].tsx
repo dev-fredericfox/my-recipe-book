@@ -172,7 +172,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     return (
       <div>
         <Head>
-          <title>Add Recipe</title>
+          <title>Edit Recipe</title>
           <meta name="description" content="Add Recipe" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
