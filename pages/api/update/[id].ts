@@ -35,7 +35,7 @@ export default async function handle(
     } catch (error) {
       if (error === 402) {
         res.status(200).json({
-          error: `You do not have the permission to perform to update recipes.`,
+          error: `You do not have the permission to update recipes.`,
         });
       } else {
         res.status(500).send({

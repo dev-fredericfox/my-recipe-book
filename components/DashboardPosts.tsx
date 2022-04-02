@@ -4,6 +4,7 @@ import Link from "next/link";
 import PublishUnpublish from "../components/PublishUnpublish";
 import DeletePost from "../components/DeletePost";
 import { saveToDB } from "../lib/fetchHelper";
+import Alert from "../components/Alert";
 
 interface Props {
   post: Post[];
@@ -12,33 +13,46 @@ interface Props {
 export default function DashboardPosts({ post }: Props) {
   const [posts, setPosts] = useState(post);
   const [fetchError, setFetchError] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
-  const [inProgressDeletionColor, setInProgressDeletionColor] = useState<number|null>()
+  const [inProgressDeletionColor, setInProgressDeletionColor] = useState<
+    number | null
+  >();
 
   const deletePost = async (id: number) => {
     setFetchStatus("PROGRESS");
-    setInProgressDeletionColor(id)
+    setInProgressDeletionColor(id);
     try {
       const result = await saveToDB("DELETE", id);
       setFetchResult(result);
       setFetchStatus("OK");
-      const cache = [...posts]
-      const postsMinusDeleted = cache.filter(el => el.id !== id)
-      setPosts(postsMinusDeleted)
-      setInProgressDeletionColor(null)
-    } catch(error:any) {
+      const cache = [...posts];
+      const postsMinusDeleted = cache.filter((el) => el.id !== id);
+      setPosts(postsMinusDeleted);
+      setInProgressDeletionColor(null);
+    } catch (error: any) {
       setFetchResult("Failed");
-      setFetchError(error.message)
+      setShowAlert(true);
+      setFetchError(error.message);
     }
+  };
+
+  const hideAlert = ():void => {
+    setShowAlert(false);
+    setInProgressDeletionColor(null);
+    setFetchResult("")
   };
 
   return (
     <div>
+      {showAlert && <Alert message={fetchError} hideAlert={hideAlert} />}
       {posts.map((el, key: number) => (
         <div
           key={key}
-          className={`${inProgressDeletionColor === el.id ?'bg-red-400': 'bg-slate-200'} rounded-lg p-2 mt-3 flex flex-row`}
+          className={`${
+            inProgressDeletionColor === el.id ? "bg-red-400" : "bg-slate-200"
+          } rounded-lg p-2 mt-3 flex flex-row`}
         >
           <div className="bg-white w-12 text-4xl text-center pt-1 rounded-lg">
             <span>{el.category.categoryEmoji}</span>
