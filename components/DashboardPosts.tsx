@@ -54,7 +54,7 @@ export default function DashboardPosts({ post }: Props) {
             inProgressDeletionColor === el.id ? "bg-red-400" : "bg-slate-200"
           } rounded-lg p-2 mt-3 flex flex-row`}
         >
-          <div className="bg-white w-12 text-4xl text-center pt-1 rounded-lg">
+          <div className="bg-white w-12 h-12 text-4xl text-center pt-1 rounded-lg">
             <span>{el.category.categoryEmoji}</span>
           </div>
           <div className="grow px-2 py-3">
@@ -62,7 +62,7 @@ export default function DashboardPosts({ post }: Props) {
               <Link href={`/admin/edit/${el.id}`}>{el.title}</Link>
             </span>
           </div>
-          <div className="flex flex-row py-3 px-2">
+          <div className="flex flex-row pt-2 px-2">
             <PublishUnpublish status={el.published} id={el.id} />
             <DeletePost id={el.id} deletePost={deletePost} />
           </div>
