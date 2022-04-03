@@ -178,7 +178,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
         <Layout>
           <div>
             <div className="mt-6">
-              <Title title="New Recipe" />
+              <Title title="Edit Recipe" />
             </div>
             <div className="mt-6">
               <input
