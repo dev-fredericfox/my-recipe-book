@@ -158,21 +158,21 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
     return (
       <div>
         <Head>
-          <title>Add Recipe</title>
-          <meta name="description" content="Add Recipe" />
+          <title>Add recipe</title>
+          <meta name="description" content="Add recipe" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
           <div>
             <div className="mt-6">
-              <Title title="New Recipe" />
+              <Title title="Add recipe" />
             </div>
             <div className="mt-6">
               <input
                 onChange={(e) => setTitle(e.target.value)}
                 className="rounded-lg pl-5 w-full h-12 px-2"
                 type="text"
-                placeholder="Recipe Name"
+                placeholder="Recipe name"
               />
             </div>
             <div className="flex flex-row mt-2">
@@ -180,7 +180,7 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
                 onChange={(e) => setCoverimg(e.target.value)}
                 className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
                 type="text"
-                placeholder="Cover Image"
+                placeholder="Cover image"
               />
               <CategoryDropdown
                 categories={categoryArray}
@@ -200,11 +200,11 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
             {ingredientRow(amountOfIngredients)}
             <div className="flex flex-row">
               <GenericGreenButton
-                text="Add Ingredient"
+                text="Add ingredient"
                 click={() => setAmountOfIngredients(amountOfIngredients + 1)}
               />
               <GenericGreenButton
-                text="Remove Ingredient"
+                text="Remove ingredient"
                 click={() => removeIngredientAndPopArray()}
               />
             </div>
@@ -212,7 +212,7 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
               <textarea
                 onChange={(e) => setContent(e.target.value)}
                 className="rounded-lg pt-2 pl-5 w-full h-40 px-2"
-                placeholder="Recipe Instructions"
+                placeholder="Recipe instructions"
               />
             </div>
           </div>

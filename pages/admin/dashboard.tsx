@@ -43,7 +43,7 @@ const Dashboard: NextPage<Props> = ({ posts }) => {
             <div className="mt-6">
               <Title title="Admin Dashboard" />
             </div>
-            <p className="text-2xl font-bold">Posts</p>
+            <p className="text-2xl font-bold">Recipes</p>
             <DashboardPosts post={posts} />
           </div>
         </Layout>

@@ -178,14 +178,14 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     return (
       <div>
         <Head>
-          <title>Edit Recipe</title>
-          <meta name="description" content="Add Recipe" />
+          <title>Edit recipe</title>
+          <meta name="description" content="Edit recipe" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Layout>
           <div>
             <div className="mt-6">
-              <Title title="Edit Recipe" />
+              <Title title="Edit recipe" />
             </div>
             <div className="mt-6">
               <input
@@ -193,7 +193,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
                 className="rounded-lg pl-5 w-full h-12 px-2"
                 type="text"
                 value={title}
-                placeholder="Recipe Name"
+                placeholder="Recipe name"
               />
             </div>
             <div className="flex flex-row mt-2">
@@ -202,7 +202,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
                 className="rounded-lg pl-5 w-full h-12 px-2 mr-2"
                 type="text"
                 value={coverimg}
-                placeholder="Cover Image"
+                placeholder="Cover image"
               />
               <CategoryDropdown
                 categories={categoryArray}
@@ -222,11 +222,11 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
             {ingredientRow(amountOfIngredients)}
             <div className="flex flex-row">
               <GenericGreenButton
-                text="Add Ingredient"
+                text="Add ingredient"
                 click={() => setAmountOfIngredients(amountOfIngredients + 1)}
               />
               <GenericGreenButton
-                text="Remove Ingredient"
+                text="Remove ingredient"
                 click={() => removeIngredientAndPopArray()}
               />
             </div>
@@ -235,17 +235,17 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
                 onChange={(e) => setContent(e.target.value)}
                 className="rounded-lg pt-2 pl-5 w-full h-48 px-2"
                 value={content}
-                placeholder="Recipe Instructions"
+                placeholder="Recipe instructions"
               />
             </div>
           </div>
           <GenericGreenButton
-            text="Update and save as Draft"
+            text="Update and save as draft"
             inProgress={inProgressL}
             click={() => submitData(false, setInProgressL)}
           />
           <GenericGreenButton
-            text="Update Post"
+            text="Update post"
             inProgress={inProgressR}
             click={() => submitData(true, setInProgressR)}
           />
