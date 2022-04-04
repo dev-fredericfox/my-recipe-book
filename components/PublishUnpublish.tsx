@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { saveToDB } from "../lib/fetchHelper";
 import Alert from "../components/Alert";
+import InProgress from "../components/InProgressIndicator"
 
 interface Props {
   status: boolean;
@@ -16,7 +17,7 @@ export default function PublishUnpublish({ status, id }: Props) {
   const [fetchStatus, setFetchStatus] = useState("");
 
   const submitData = async (published: boolean, postId: number) => {
-    setInProgress(true)
+    setInProgress(true);
     const body = {
       published: !published,
     };
@@ -25,12 +26,12 @@ export default function PublishUnpublish({ status, id }: Props) {
       setFetchResult(result);
       setFetchStatus("OK");
       setLocalStatus(!localStatus);
-      setInProgress(false)
+      setInProgress(false);
     } catch (error: any) {
       setFetchResult("Failed");
       setShowAlert(true);
       setFetchError(error.message);
-      setInProgress(false)
+      setInProgress(false);
     }
   };
 
@@ -50,11 +51,7 @@ export default function PublishUnpublish({ status, id }: Props) {
           ■
         </div>
       )}
-      {inProgress && (
-      <span className="flex h-3 w-3 mr-4 mt-3 cursor-wait">
-            <span className="animate-ping relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
-          </span>
-      )}
+      {inProgress && <InProgress color="orange" />}
       {!localStatus && !inProgress && (
         <div
           className="cursor-pointer text-2xl mr-3 my-0"

@@ -38,6 +38,8 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
   const [coverimg, setCoverimg] = useState("");
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
+  const [inProgressR, setInProgressR] = useState(false);
+  const [inProgressL, setInProgressL] = useState(false);
   const [ingredients, setIngredients] = useState<Array<Ingredient>>([]);
   const [fetchError, setFetchError] = useState("");
   const [fetchResult, setFetchResult] = useState("");
@@ -52,7 +54,10 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
     setCategoryArray(cache);
   };
 
-  const submitData = async (published: boolean) => {
+  const submitData = async (published: boolean, button:(arg0: boolean) => void) => {
+    button(true);
+    setFetchStatus("");
+    setFetchResult("");
     const body = {
       title,
       content,
@@ -65,9 +70,11 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
       const result = await saveToDB("POST", 0, body);
       setFetchResult(result);
       setFetchStatus("OK");
+      button(false);
     } catch (error: any) {
       setFetchResult("Failed");
       setFetchError(error.message);
+      button(false);
     }
   };
 
@@ -211,9 +218,14 @@ const CreatePost: NextPage<Props> = ({ categories }) => {
           </div>
           <GenericGreenButton
             text="Save as Draft"
-            click={() => submitData(false)}
+            inProgress={inProgressL}
+            click={() => submitData(false, setInProgressL)}
           />
-          <GenericGreenButton text="Publish" click={() => submitData(true)} />
+          <GenericGreenButton
+            text="Publish Post"
+            inProgress={inProgressR}
+            click={() => submitData(true, setInProgressR)}
+          />
           <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
           <p>{fetchError}</p>
         </Layout>
