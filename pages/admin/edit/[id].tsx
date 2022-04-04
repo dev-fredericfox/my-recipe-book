@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSession, getSession } from "next-auth/react";
 import { GetServerSideProps } from "next";
 import { getAllCategories } from "../../../lib/getAllCategories";
 import type { NextPage } from "next";
@@ -13,7 +14,6 @@ import { Category, Post } from "../../../lib/interfaces";
 import { getPost } from "../../../lib/getPost";
 import { saveToDB } from "../../../lib/fetchHelper";
 import { CheckIcon } from "@heroicons/react/solid";
-import { useSession, getSession } from "next-auth/react";
 
 export const getServerSideProps: GetServerSideProps<any> = async ({
   req,
@@ -50,6 +50,8 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     post[0]?.ingredients ?? []
   );
   const [fetchError, setFetchError] = useState("");
+  const [inProgressR, setInProgressR] = useState(false);
+  const [inProgressL, setInProgressL] = useState(false);
   const [fetchResult, setFetchResult] = useState("");
   const [fetchStatus, setFetchStatus] = useState("");
   const [categoryArray, setCategoryArray] = useState<Category[]>(categories);
@@ -68,7 +70,10 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
     setCategoryArray(cache);
   };
 
-  const submitData = async (published: boolean) => {
+  const submitData = async (published: boolean,button:(arg0: boolean) => void) => {
+    button(true);
+    setFetchStatus("");
+    setFetchResult("");
     const body = {
       title,
       content,
@@ -81,9 +86,11 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
       const result = await saveToDB("PUT", postId, body);
       setFetchResult(result);
       setFetchStatus("OK");
+      button(false);
     } catch (error: any) {
       setFetchResult("Failed");
       setFetchError(error.message);
+      button(false);
     }
   };
 
@@ -234,11 +241,13 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
           </div>
           <GenericGreenButton
             text="Update and save as Draft"
-            click={() => submitData(false)}
+            inProgress={inProgressL}
+            click={() => submitData(false, setInProgressL)}
           />
           <GenericGreenButton
             text="Update Post"
-            click={() => submitData(true)}
+            inProgress={inProgressR}
+            click={() => submitData(true, setInProgressR)}
           />
           <p>{fetchStatus === "OK" && <CheckIcon className="h-6 w-6" />}</p>
           <p>{fetchError}</p>
@@ -246,7 +255,7 @@ const EditPost: NextPage<Props> = ({ categories, post, postId }) => {
       </div>
     );
   }
-  return <AccessDenied/>
+  return <AccessDenied />;
 };
 
 export default EditPost;
