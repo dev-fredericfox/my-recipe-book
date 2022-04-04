@@ -1,10 +1,10 @@
-export async function revalidateNow() {
+export async function revalidateNow(path:string) {
   const fetchUrl = `${process.env.HOSTNAME}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}`;
-  console.log(fetchUrl);
   try {
-    let response = await fetch(fetchUrl, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch(fetchUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify({pathToRevalidate: path})
     });
     return response
   } catch (error:any) {
