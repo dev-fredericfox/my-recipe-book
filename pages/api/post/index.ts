@@ -38,7 +38,7 @@ export default async function handle(
         });
       } else {
         res.status(500).send({
-          message: "Database Error",
+          message: "Database error",
         });
       }
     }
