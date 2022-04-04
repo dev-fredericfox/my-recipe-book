@@ -107,7 +107,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                     ),
                     li: ({ node, ordered, checked, index, ...props }) => {
                       if (ordered) {
-                        return <li  {...props} />;
+                        return <li {...props} />;
                       } else {
                         return (
                           <label className="cursor-pointer">
@@ -116,7 +116,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                         );
                       }
                     },
-                    ol: ({ node, ordered,...props }) => (
+                    ol: ({ node, ordered, ...props }) => (
                       <ol className="list-decimal" {...props} />
                     ),
                     input: ({
@@ -151,6 +151,9 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                           alt={node.alt}
                         />
                       </div>
+                    ),
+                    a: (node) => (
+                      <a className="underline" href={node.href} onClick={() => console.log(node)}>{node.children}</a>
                     ),
                   }}
                   remarkPlugins={[remarkGfm, remarkUnwrapImages]}
