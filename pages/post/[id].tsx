@@ -97,13 +97,13 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                 <ReactMarkdown
                   components={{
                     h1: ({ node, ...props }) => (
-                      <h1 className="text-2xl font-bold" {...props} />
+                      <h1 className="text-2xl mt-2 font-bold" {...props} />
                     ),
                     h2: ({ node, ...props }) => (
-                      <h2 className="text-xl font-bold" {...props} />
+                      <h2 className="text-xl mt-2 font-bold" {...props} />
                     ),
                     h3: ({ node, ...props }) => (
-                      <h3 className="text-lg font-bold" {...props} />
+                      <h3 className="text-lg mt-2 font-bold" {...props} />
                     ),
                     li: ({ node, ordered, checked, index, ...props }) => {
                       if (ordered) {
