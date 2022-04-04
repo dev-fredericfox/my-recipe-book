@@ -29,7 +29,9 @@ export default async function handle(
           where: { id: postId },
           data: data,
         });
-        let revalidation = await revalidateNow();
+        console.log(postId)
+        let revalidationIndex = await revalidateNow(`/`);
+        let revalidation = await revalidateNow(`/post/${postId}`);
         res.status(200).json(result);
       }
     } catch (error) {
