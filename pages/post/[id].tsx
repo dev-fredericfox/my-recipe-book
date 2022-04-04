@@ -10,7 +10,7 @@ import { getPost } from "../../lib/getPost";
 import Layout from "../../components/Layout";
 import { ArrowSmLeftIcon } from "@heroicons/react/outline";
 import Link from "next/link";
-import IngredientsList from "../../components/IngredientsList";
+import IngredientList from "../../components/IngredientList";
 import { Post } from "../../lib/interfaces";
 
 interface Props {
@@ -67,17 +67,24 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
             <p className="text-2xl font-bold">
               Ingredients ({post.ingredients.length})
             </p>
+            {post.ingredients.map((el, key) => {
+              return (
+                <IngredientList
+                  key={key}
+                  emoji={el.emoji}
+                  ingredient={el.ingredient}
+                  amount={parseFloat(el.amount) * ingredientFactor}
+                  unit={el.unit}
+                />
+              );
+            })}
 
-            <IngredientsList
-              ingredients={post.ingredients}
-              factor={ingredientFactor}
-            />
             <div className="flex flex-row-reverse mt-6 mb-4">
               <input
                 onChange={(e) => ingredientMultiplication(e.target.value)}
                 className="rounded-lg pl-5 w-20 h-12 px-2 mr-2"
                 type="number"
-                inputMode="numeric" 
+                inputMode="numeric"
                 pattern="[0-9]*"
                 placeholder="1"
               />
@@ -86,22 +93,31 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
             <p className="text-2xl mt-2 mb-2 font-bold">Recipe</p>
             {
               /* Maybe render Markdown? */
-              <div className="text-xl">
+              <div className="text-base">
                 <ReactMarkdown
                   components={{
                     h1: ({ node, ...props }) => (
-                      <h1 className="text-4xl" {...props} />
+                      <h1 className="text-2xl font-bold" {...props} />
                     ),
                     h2: ({ node, ...props }) => (
-                      <h2 className="text-3xl" {...props} />
+                      <h2 className="text-xl font-bold" {...props} />
                     ),
                     h3: ({ node, ...props }) => (
-                      <h2 className="text-2xl" {...props} />
+                      <h3 className="text-lg font-bold" {...props} />
                     ),
-                    li: ({ node, ordered, checked, index, ...props }) => (
-                      <label className="cursor-pointer">
-                        <li {...props} />
-                      </label>
+                    li: ({ node, ordered, checked, index, ...props }) => {
+                      if (ordered) {
+                        return <li  {...props} />;
+                      } else {
+                        return (
+                          <label className="cursor-pointer">
+                            <li {...props} />
+                          </label>
+                        );
+                      }
+                    },
+                    ol: ({ node, ordered,...props }) => (
+                      <ol className="list-decimal" {...props} />
                     ),
                     input: ({
                       node,
@@ -157,7 +173,7 @@ export async function getStaticPaths() {
   const paths = await getAllPostIds();
   return {
     paths,
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 }
 
