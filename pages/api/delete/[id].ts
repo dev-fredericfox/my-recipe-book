@@ -27,6 +27,8 @@ export default async function handle(
         const result = await prisma.post.delete({
           where: { id: postId },
         });
+        let revalidation = await revalidateNow('/');
+        let revalidationNewPost = await revalidateNow(`/post/${postId}`);
         res.status(200).json(result);
       }
     } catch (error) {

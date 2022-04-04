@@ -28,7 +28,7 @@ export default async function handle(
         const result = await prisma.post.create({
           data: data,
         });
-        let revalidation = await revalidateNow();
+        const revalidation = await revalidateNow('/');
         res.status(200).json(result);
       }
     } catch (error) {
