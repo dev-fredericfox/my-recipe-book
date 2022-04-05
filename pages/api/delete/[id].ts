@@ -19,7 +19,7 @@ export default async function handle(
     try {
       let user = await getUser(session?.user?.email);
       userTemp = user;
-      if (!user[0].authorizedToPublish) {
+      if (user && !user[0].authorizedToPublish) {
         throw 402;
       } else {
         // Author has bug, but why?

@@ -19,9 +19,7 @@ export default async function handle(
     try {
       let user = await getUser(session?.user?.email);
       userTemp = user;
-      if (!user[0].authorizedToPublish) {
-        throw 402;
-      } else {
+      if (user && user[0].authorizedToPublish) {
         const data = Object.assign(req.body);
         const connectCategory = { connect: { name: req.body.category } };
         data.category ? (data.category = connectCategory) : null;
@@ -29,10 +27,12 @@ export default async function handle(
           where: { id: postId },
           data: data,
         });
-        console.log(postId)
+        console.log(postId);
         let revalidationIndex = await revalidateNow(`/`);
         let revalidation = await revalidateNow(`/post/${postId}`);
         res.status(200).json(result);
+      } else {
+        throw 402;
       }
     } catch (error) {
       if (error === 402) {

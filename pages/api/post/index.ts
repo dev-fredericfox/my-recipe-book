@@ -18,9 +18,7 @@ export default async function handle(
     try {
       let user = await getUser(session?.user?.email);
       userTemp = user;
-      if (!user[0].authorizedToPublish) {
-        throw 402;
-      } else {
+      if (user && user[0].authorizedToPublish) {
         const author = { connect: { email: session?.user?.email } };
         const data = Object.assign(req.body, { author: author });
         const connectCategory = { connect: { name: req.body.category } };
@@ -28,8 +26,10 @@ export default async function handle(
         const result = await prisma.post.create({
           data: data,
         });
-        const revalidation = await revalidateNow('/');
+        const revalidation = await revalidateNow("/");
         res.status(200).json(result);
+      } else {
+        throw 402;
       }
     } catch (error) {
       if (error === 402) {

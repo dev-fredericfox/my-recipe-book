@@ -18,13 +18,13 @@ export default async function handle(
     try {
       let user = await getUser(session?.user?.email);
       userTemp = user;
-      if (!user[0].authorizedToPublish) {
-        throw 402;
-      } else {
+      if (user && user[0].authorizedToPublish) {
         const result = await prisma.category.create({
           data: data,
         });
         res.status(200).json(result);
+      } else {
+        throw 402;
       }
     } catch (error: any) {
       if (error === 402) {
