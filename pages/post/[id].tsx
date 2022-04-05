@@ -44,7 +44,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
       <Layout>
         <main>
           <div className="flex flex-row mt-10 pb-6">
-            <div className="bg-white h-8 w-8 rounded-full">
+            <div className="bg-white h-8 w-8 mr-2 rounded-full">
               <Link href="/" passHref>
                 <ArrowSmLeftIcon className="h-8 w-8 text-gray-300" />
               </Link>
