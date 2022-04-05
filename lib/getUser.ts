@@ -1,6 +1,7 @@
 import prisma from "./prisma";
 
 export async function getUser(email: string | null | undefined) {
+  try {
   const user = await prisma.user.findMany({
     where: { email: email }
   });
@@ -10,4 +11,9 @@ export async function getUser(email: string | null | undefined) {
     return el;
   });
   return userFormatted;
+} catch(error) {
+  console.log("Database connection error")
+} finally {
+  await prisma.$disconnect()
+}
 }
