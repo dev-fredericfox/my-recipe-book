@@ -44,7 +44,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
       <Layout>
         <main>
           <div className="flex flex-row mt-10 pb-6">
-            <div className="bg-white rounded-full">
+            <div className="bg-white h-8 w-8 rounded-full">
               <Link href="/" passHref>
                 <ArrowSmLeftIcon className="h-8 w-8 text-gray-300" />
               </Link>
@@ -141,7 +141,7 @@ const BlogPost: NextPage<Props> = ({ postData }) => {
                       </tbody>
                     ),
                     img: (node, ...props) => (
-                      <div className="h-60 relative rounded-2xl overflow-hidden mx-auto my-6">
+                      <div className="h-60 lg:h-80 relative rounded-2xl overflow-hidden mx-auto my-6">
                         {" "}
                         <Image
                           className="h-60 relative rounded-2xl overflow-hidden mx-auto my-6"

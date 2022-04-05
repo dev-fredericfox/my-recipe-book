@@ -122,12 +122,12 @@ export default function AddCategoryModal({
                   Add Category
                 </h3>
                 <div className="mt-2">
-                  <div className="mt-6">
+                  <div className="mt-6 flex flex-row">
                     <input
                       onChange={(e) => setEmoji(e.target.value)}
-                      className="rounded-lg pl-5 w-full h-12 px-2"
+                      className="rounded-lg w-12 mr-2 pl-5 h-12 px-2"
                       type="text"
-                      placeholder="Category Emoji"
+                      placeholder="🌎"
                     />
                     <input
                       onChange={(e) => setCategory(e.target.value)}
