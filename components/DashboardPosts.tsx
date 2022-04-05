@@ -64,7 +64,7 @@ export default function DashboardPosts({ post }: Props) {
           </div>
           <div className="flex flex-row pt-2 px-2">
             <PublishUnpublish status={el.published} id={el.id} />
-            <DeletePost id={el.id} deletePost={deletePost} />
+            <DeletePost id={el.id} deletePost={deletePost} title={el.title} />
           </div>
         </div>
       ))}
