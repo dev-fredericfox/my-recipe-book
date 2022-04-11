@@ -37,5 +37,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-#environment variables
+# environment variables
 .env
+
+# VS Code
+.vscode
